@@ -1,0 +1,798 @@
+\documentclass[12pt,a4paper]{article}
+
+% ─── PAKETLER ───────────────────────────────────────────────────────────────
+\usepackage[turkish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{mdframed}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ─── SAYFA DÜZENİ ───────────────────────────────────────────────────────────
+\geometry{
+  top=2.5cm, bottom=2.5cm,
+  left=2.5cm, right=2.5cm,
+  headheight=15pt
+}
+
+% ─── RENKLER ────────────────────────────────────────────────────────────────
+\definecolor{uyapBlue}{RGB}{0,71,133}
+\definecolor{uyapGold}{RGB}{212,160,23}
+\definecolor{uyapGreen}{RGB}{39,119,64}
+\definecolor{uyapRed}{RGB}{180,35,35}
+\definecolor{uyapGray}{RGB}{245,246,248}
+\definecolor{uyapDark}{RGB}{30,40,55}
+\definecolor{uyapLight}{RGB}{230,240,255}
+\definecolor{uyapOrange}{RGB}{210,100,20}
+
+% ─── TCOLORBOX STILLERI ─────────────────────────────────────────────────────
+\tcbuselibrary{skins,breakable,listings}
+
+\newtcolorbox{tanim}[1][]{
+  enhanced, breakable,
+  colback=uyapLight, colframe=uyapBlue,
+  fonttitle=\bfseries\color{white},
+  coltitle=white, attach boxed title to top left={yshift=-3mm,xshift=5mm},
+  boxed title style={colback=uyapBlue, sharp corners},
+  title={\faBook\ Tanım},
+  #1
+}
+
+\newtcolorbox{onemli}[1][]{
+  enhanced, breakable,
+  colback=yellow!10, colframe=uyapGold,
+  fonttitle=\bfseries,
+  title={\faExclamationTriangle\ Önemli Uyarı},
+  #1
+}
+
+\newtcolorbox{dikkat}[1][]{
+  enhanced, breakable,
+  colback=red!8, colframe=uyapRed,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  attach boxed title to top left={yshift=-3mm,xshift=5mm},
+  boxed title style={colback=uyapRed},
+  title={\faShieldAlt\ DİKKAT},
+  #1
+}
+
+\newtcolorbox{bilgi}[1][]{
+  enhanced, breakable,
+  colback=green!8, colframe=uyapGreen,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  attach boxed title to top left={yshift=-3mm,xshift=5mm},
+  boxed title style={colback=uyapGreen},
+  title={\faInfoCircle\ Bilgi Notu},
+  #1
+}
+
+\newtcolorbox{adimlar}[1][]{
+  enhanced, breakable,
+  colback=uyapGray, colframe=uyapDark,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  attach boxed title to top left={yshift=-3mm,xshift=5mm},
+  boxed title style={colback=uyapDark},
+  title={\faCogs\ İşlem Adımları},
+  #1
+}
+
+\newtcolorbox{yasal}[1][]{
+  enhanced, breakable,
+  colback=orange!8, colframe=uyapOrange,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  attach boxed title to top left={yshift=-3mm,xshift=5mm},
+  boxed title style={colback=uyapOrange},
+  title={\faGavel\ Yasal Dayanak},
+  #1
+}
+
+% ─── BAŞLIK STİLLERİ ────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\Large\bfseries\color{uyapBlue}}
+  {\thesection.}{0.5em}{}
+  [\color{uyapGold}\titlerule]
+
+\titleformat{\subsection}
+  {\large\bfseries\color{uyapDark}}
+  {\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{uyapBlue}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ─── ÜSTBILGI / ALTBILGI ────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{uyapBlue}\bfseries Temel UYAP Bilgisi}
+\fancyhead[R]{\small\color{uyapGray!60!black}
+              İnfaz ve Koruma Memurları Eğitimi}
+\fancyfoot[C]{\small\thepage}
+\fancyfoot[R]{\small\color{gray} Adalet Bakanlığı --- CTEGM}
+\renewcommand{\headrulewidth}{1.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{uyapBlue}\leaders\hrule height \headrulewidth\hfill}}
+
+% ─── HİPERBAĞLANTI ──────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true,
+  linkcolor=uyapBlue,
+  urlcolor=uyapBlue,
+  pdftitle={Temel UYAP Bilgisi},
+  pdfauthor={CTEGM Eğitim Birimi}
+}
+
+% ─── BELGE BAŞLANGICI ───────────────────────────────────────────────────────
+\begin{document}
+
+% ─── KAPAK ──────────────────────────────────────────────────────────────────
+\begin{titlepage}
+\pagecolor{uyapBlue}
+\color{white}
+\centering
+\vspace*{2cm}
+
+{\Huge\bfseries T.C.}\\[0.3cm]
+{\Large\bfseries ADALET BAKANLIĞI}\\[0.2cm]
+{\large Ceza ve Tevkifevleri Genel Müdürlüğü}
+
+\vspace{1.5cm}
+\color{uyapGold}
+{\rule{12cm}{2pt}}
+\vspace{0.5cm}
+
+\color{white}
+{\fontsize{32}{40}\selectfont\bfseries TEMEL UYAP BİLGİSİ}
+
+\vspace{0.5cm}
+\color{uyapGold}
+{\rule{12cm}{2pt}}
+
+\vspace{1.5cm}
+\color{white}
+{\LARGE\bfseries BÖLÜM 9}
+
+\vspace{1cm}
+\begin{tcolorbox}[
+  colback=white!15!uyapBlue,
+  colframe=uyapGold,
+  width=10cm,
+  arc=8pt
+]
+\centering
+\large
+\textbf{Hedef Kitle:}\\
+Ceza İnfaz Kurumlarında Sözleşmeli\\
+Göreve Başlayan\\
+\textbf{İnfaz ve Koruma Memurları}\\[0.5cm]
+\textbf{Toplam Süre:} 5 Saat\\
+(3 Saat Yüz Yüze + 2 Saat Asenkron)
+\end{tcolorbox}
+
+\vfill
+{\large 2024 --- Ankara}
+\end{titlepage}
+\pagecolor{white}
+
+% ─── İÇİNDEKİLER ────────────────────────────────────────────────────────────
+\tableofcontents
+\newpage
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Temel UYAP Bilgisi}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{UYAP'ın Tanımı ve Amaçları}
+
+\begin{tanim}
+\textbf{UYAP (Ulusal Yargı Ağı Projesi)}, adalet hizmetlerinin en kısa
+zamanda, en az maliyetle, \textit{şeffaf, etkili, verimli, hızlı, güvenilir,
+tarafsız ve denetlenebilir} şekilde yerine getirilmesini temin etmek üzere
+geliştirilen ve Türkiye'deki e-devlet uygulamalarının bir parçasını
+oluşturan \textbf{elektronik adalet sistemidir}.
+\end{tanim}
+
+\vspace{0.5cm}
+
+UYAP, Adalet Bakanlığı Bilgi İşlem Dairesi Başkanlığı tarafından hayata
+geçirilmiş \textbf{merkezi bir bilişim sistemi} olarak aşağıdaki tüm birimleri
+kapsamaktadır:
+
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=1.5em]
+  \item[\faGavel] Tüm mahkemeler
+  \item[\faSearch] Savcılık birimleri
+  \item[\faLock] Cezaevleri
+  \item[\faBalanceScale] Diğer yargı birimleri
+  \item[\faBuilding] Adalet Bakanlığı merkez teşkilâtı
+  \item[\faLink] Bağlı ve ilgili birimler
+  \item[\faUniversity] İlgili devlet kurumları
+  \item[\faNetworkWired] Entegre sistemler
+\end{itemize}
+\end{multicols}
+
+\subsubsection{Entegre Sistemler}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Sistem} & \textbf{Kurum} & \textbf{Sağlanan Bilgi} \\
+\midrule
+MERNİS   & İçişleri Bakanlığı  & Nüfus / kimlik kaydı \\
+Adli Sicil & Adalet Bakanlığı  & Sabıka kaydı \\
+TAKBİS   & Tapu ve Kadastro    & Tapu kaydı \\
+POLNET   & Emniyet Genel Müd.  & Aranan kişi sorgulama \\
+Merkez Bankası & TCMB            & Döviz kuru bilgisi \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\subsection{UYAP'ın Faydaları}
+% ─────────────────────────────────────────────────────────────────────────────
+
+UYAP'ın yargı sistemine sağladığı başlıca katkılar şu başlıklar altında
+incelenebilir:
+
+\subsubsection{Hız ve Verimlilik}
+\begin{itemize}
+  \item Yargı birimleri arasında yazışmalar \textbf{kâğıtsız ofis} mantığında
+        elektronik ortamda yapılmaktadır.
+  \item Davalardaki talimat işlemleri UYAP'ta \textbf{online} olarak karşı
+        birime iletilmekte, cevap anında gönderilmektedir.
+  \item Temyiz edilen dosyaların Yargıtay'a gönderilmesi ve geri dönmesi
+        \textbf{elektronik ortamda anlık} sağlanmaktadır.
+  \item Mahkemelerin yılsonu devir işlemleri \textbf{çok kısa sürede}
+        tamamlanmaktadır.
+\end{itemize}
+
+\subsubsection{Doğruluk ve Tutarlılık}
+\begin{itemize}
+  \item Veriler \textbf{tek yerde} tutulduğundan eksiksiz, doğru ve
+        güncel bilgiye anında ulaşılabilmektedir.
+  \item Tevzi işlemleri \textbf{otomatik ve adil} şekilde yapılmaktadır;
+        müdahale ve yolsuzlukların önüne geçilmektedir.
+  \item Mükerrer davaların tespiti mümkün hale gelmektedir.
+\end{itemize}
+
+\subsubsection{Denetim ve Şeffaflık}
+\begin{itemize}
+  \item Doküman Yönetim Sistemi sayesinde \textbf{kimin, ne zaman,
+        ne yaptığı} takip edilebilmektedir.
+  \item Kasa hesapları sistem tarafından \textbf{otomatik kontrol}
+        edilmekte; usulsüzlükler anında ortaya çıkarılmaktadır.
+  \item Merkezden taşradaki adliyelerin \textbf{online denetimi}
+        mümkün hale gelmiştir.
+\end{itemize}
+
+\subsubsection{Ceza İnfaz Kurumlarına Özel Faydalar}
+
+\begin{bilgi}
+\begin{itemize}
+  \item Mahkûm ve tutuklu sayıları \textbf{anlık raporlanabilmektedir}.
+  \item Kadın/erkek/çocuk ayrımı \textbf{merkezden izlenebilmektedir}.
+  \item Suç türlerine göre istatistikler \textbf{otomatik üretilmektedir}.
+  \item Ceza infaz kurumları \textbf{etkin biçimde takip} edilebilmektedir.
+  \item İnfaz süresi, koşullu salıverilme tarihi gibi hesaplamalar
+        \textbf{sistem yardımıyla} yapılmaktadır.
+\end{itemize}
+\end{bilgi}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\subsection{UYAP'a Veri Girişi Sırasında Dikkat Edilmesi Gereken Hususlar}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{onemli}
+Mevzuat hükümlerine göre UYAP'ın kullanılması \textbf{zorunlu} olup bütün
+yazışmalar, iş ve işlemler UYAP aracılığıyla yürütülmektedir. Görevli ve
+yetkili personel UYAP'a verileri \textbf{doğru, eksiksiz ve zamanında}
+girmekle yükümlüdür.
+\end{onemli}
+
+\subsubsection{Hatalı Veri Girişinin Sonuçları}
+
+\begin{center}
+\begin{tabular}{lp{9cm}}
+\toprule
+\textbf{Etkilenen Alan} & \textbf{Sonuç} \\
+\midrule
+Adli istatistik & Doğru üretilememesi; yanlış politika geliştirilmesi \\
+Kişi hakları    & Hak kayıpları, mağduriyetler \\
+Yargılama süreci & Süreçlerin uzaması \\
+Denetim          & Teftiş ve denetimlerin yapılamaması \\
+Kurum bütçesi    & Maliyetlerin artması \\
+Personel         & İdarî/adlî soruşturma açılması \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Veri Giriş Sorunlarının Kaynakları}
+
+\begin{itemize}
+  \item[\faTimesCircle] Yeterli bilgi, beceri ve yetkinlik eksikliği
+  \item[\faTimesCircle] İş yoğunluğu
+  \item[\faTimesCircle] İş bölümünün bulunmaması
+  \item[\faTimesCircle] Dikkat eksikliği
+  \item[\faTimesCircle] Veri girişinin önemi konusunda farkındalık eksikliği
+\end{itemize}
+
+\subsubsection{Gerekli Şifreleri Oluşturma ve Kullanma}
+
+UYAP uygulamalarını kullanabilmek için dört temel parolaya ihtiyaç
+duyulmaktadır:
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tabular}{p{3.5cm}p{5cm}p{5cm}}
+\toprule
+\textbf{Parola Türü} & \textbf{Nasıl Alınır?} &
+\textbf{Nasıl Değiştirilir?} \\
+\midrule
+Portal Parolası &
+  Parola Talep Formu $\to$ Faks $\to$ Bilgi İşlem Daire Bşk. &
+  UYAP Portal $\to$ Şifre İşlemleri \\[4pt]
+E-Posta Parolası &
+  Portal parolasıyla giriş $\to$ Şifre İşlemleri &
+  Şifre İşlemleri sekmesi \\[4pt]
+Domain (Bilgisayar) Parolası &
+  sifredegistirme.uyap.gov.tr $\to$ E-posta onay kodu &
+  CTRL+ALT+DELETE $\to$ Parola Değiştir \\[4pt]
+E-İmza Parolası &
+  TÜBİTAK KamuSM $\to$ kamusm.gov.tr &
+  KamuSM sistemi üzerinden \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{adimlar}[title={\faCogs\ Portal Parolası Alma Adımları}]
+\begin{enumerate}
+  \item Parola Talep Formu doldurulur
+  \item Ekran çıktısı alınır
+  \item Personel \textbf{ve} kurum amiri imzalar
+  \item Forma yazılı numaraya \textbf{faks çekilir}
+  \item Bilgi İşlem Dairesi Başkanlığı parolayı oluşturur
+  \item Personele \textbf{telefonla} verilir
+  \item Portal $\to$ Şifre İşlemleri $\to$ Parola değiştirilir $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\begin{adimlar}[title={\faCogs\ E-İmza Parolası Alma Adımları}]
+\begin{enumerate}
+  \item \texttt{kamusm.gov.tr} $\to$ Bireysel İşlemler $\to$
+        Şifreli Giriş
+  \item TC Kimlik No + Güvenlik Sözcüğü girişi
+  \item Sisteme kayıtlı telefon numarası doğrulanır
+  \item ONAY $\to$ Cep telefonuna \textbf{SMS onay kodu} gelir
+  \item Onay kodu girilir $\to$ Sisteme giriş
+  \item E-imza parolası oluşturulur $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\begin{dikkat}
+\begin{itemize}
+  \item Şifrenizi \textbf{kimseyle paylaşmayın.}
+        (53/1 sayılı Genelge Md.\ 8: Şifreyi kullanan personel sorumludur.)
+  \item Sistemden \textbf{çıkış yapmadan} bilgisayarı bırakmayın.
+  \item Her işlem \textbf{kullanıcı adınıza} kayıt altına alınır.
+  \item Yanlış işlem yapan personel ve
+        \textbf{amir birlikte sorumlu tutulur.}
+\end{itemize}
+\end{dikkat}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{UYAP Doküman Editörü}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{tanim}
+\textbf{UYAP Doküman Editörü}, UYAP sisteminde kullanılan,
+e-imza ile belge imzalama özelliğine sahip, \texttt{.udf} uzantılı dosyaları
+destekleyen \textbf{kelime işlemci uygulamasıdır}.
+\end{tanim}
+
+\subsection{Doküman Editörünün Kurulumu}
+
+\begin{adimlar}
+\begin{enumerate}
+  \item \textbf{Java Kurulumu:}
+        \texttt{java.com/tr} $\to$ Java İndir (32 bit) $\to$ Kur
+  \item \textbf{E-İmza Kart Okuyucu Sürücüleri:}
+        Sertifika hizmet sağlayıcısından alınan sürücüler yüklenir
+  \item \textbf{UYAP Doküman Editörü:}
+        \texttt{uyap.gov.tr} $\to$ UYAP Kelime İşlemci İndir
+        $\to$ ZIP çıkart $\to$ Kur $\to$ İleri $\to$ Tamamla $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\subsection{Belge Kaydetme}
+
+\textbf{İlk Kaydetme:}
+\begin{quote}
+Dosya $\to$ Farklı Kaydet $\to$ Konum Seç $\to$ Kaydet
+\end{quote}
+
+\textbf{Çalışırken Kaydetme:}
+\begin{quote}
+Dosya $\to$ Kaydet \quad \textit{veya} \quad
+Hızlı Erişim Çubuğu $\to$ Kaydet simgesi
+\end{quote}
+
+\begin{bilgi}
+Editör varsayılan olarak \texttt{\textbf{.udf}} biçiminde kaydeder.
+Farklı biçimler: \texttt{.usf}, \texttt{.doc}, \texttt{.pdf},
+\texttt{.odt}, \texttt{.rtf}, \texttt{.tif}, \texttt{.jpg}
+\end{bilgi}
+
+\subsection{Doküman İmzalama}
+
+\begin{adimlar}[title={\faCogs\ E-İmza ile İmzalama Adımları}]
+\begin{enumerate}
+  \item E-imzayı bilgisayara tak
+  \item Araçlar Menüsü $\to$ İmza Kütüphanesi $\to$ Firma kartını seç
+  \item \textbf{İmzala} simgesine tıkla
+  \item E-imza şifresini gir
+  \item Tamam'a bas
+  \item Sağ üst köşede \textbf{kurdele} görünür
+        (\textit{Kurdele = İmza doğrulandı}) $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\begin{onemli}
+İmzalı evrakta değişiklik yapılırsa \textbf{imza bilgileri kaybolur!}
+Değişiklik sonrası evrak \textbf{yeniden e-imza ile imzalanmalıdır.}
+\end{onemli}
+
+\subsection{Tümünü Farklı Kaydet}
+
+\begin{adimlar}
+\begin{enumerate}
+  \item Dosya $\to$ Tümünü Farklı Kaydet
+  \item Evrak veya klasör seç (\texttt{.udf} dosyaları)
+  \item Çıktı klasörünü belirle
+  \item Format seç: \texttt{doc / odt / pdf / rtf}
+  \item Dönüştür $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\begin{bilgi}
+\textbf{Not:} C: sürücüsünde LibreOffice veya OpenOffice
+(v3 önerilir) kurulu olması gerekmektedir.
+\end{bilgi}
+
+\subsection{Belge Yazdırma}
+
+\begin{adimlar}
+\begin{enumerate}
+  \item Dosya $\to$ Yazdır
+  \item Kopya sayısını belirle
+  \item Doğru yazıcı seçili mi kontrol et
+  \item Sayfa düzenini ayarla
+  \item Yazdır $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\begin{bilgi}
+\textbf{İpucu:} Evrakta Web ID (evrakın aslının kontrol edilmesini
+sağlayan kod) bulunması durumunda \textit{Metni Sayfaya Sığdır}
+seçeneği aktif hale gelir. Web ID'siz yazdırmak için bu seçeneği
+pasife alın.
+\end{bilgi}
+
+\subsection{Görev Çubuğu ve Kişisel Menü}
+
+\begin{adimlar}[title={\faCogs\ Kişiselleştirme}]
+\begin{enumerate}
+  \item Herhangi bir ikona \textbf{sağ tık} yapın
+  \item \textit{``Araç Çubuğuna Ekle''} $\to$ Görev Çubuğuna ekler
+  \item \textit{``Kişisel Menüye Ekle''} $\to$ Kişisel Menüye ekler
+  \item Kaldırmak için: Çubuk/menüdeki ikona sağ tık $\to$ Kaldır
+\end{enumerate}
+\end{adimlar}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Kısayol} & \textbf{İşlev} \\
+\midrule
+Alt veya F10    & Menülere hızlı erişim \\
+Ctrl + F1       & Menüyü gizle/göster \\
+Çift tıkla      & Menüyü gizle \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Personel Uygulamaları (Ortak İşlemler)}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{adimlar}[title={\faCogs\ Sisteme Erişim}]
+UYAP Portal $\to$ Kullanıcı Bilgileri Gir $\to$
+Personel Uygulamaları Rolü $\to$ Aktif Görevlendirmeler $\to$
+Ortak İşlemler
+\end{adimlar}
+
+\subsection{Özlük İşlemleri}
+
+\subsubsection{Aile Fert Bilgileri}
+
+\begin{quote}
+Personel İşlemleri $\to$ Özlük Bilgisi $\to$
+Personel Bilgileri $\to$ Aile Fert Bilgileri
+\end{quote}
+
+\begin{onemli}
+NAS (Atanma Talep Formu)'nda \textbf{Eş Durumu} tayin gerekçesi seçilecekse
+eşin çalışma ve görev yeri bilgileri \textbf{mutlaka güncel} olmalıdır!
+\end{onemli}
+
+\begin{dikkat}
+Kaydet simgesine tıklamadan kaydetme işlemi \textbf{gerçekleşmez.}
+Kaydetmeden ekranı kapattığınızda bilgiler eski formunda kalır.
+\end{dikkat}
+
+\subsection{İzin Bilgileri}
+
+\begin{adimlar}[title={\faCogs\ İzin Talep Akışı}]
+\begin{enumerate}
+  \item Personel İşlemleri $\to$ Personel İzin Talep Formu $\to$
+        \textbf{Yeni Talep}
+  \item İzin türü seç
+  \item İzne ayrılış ve bitiş tarihlerini gir
+        (İzin süresi \textbf{otomatik hesaplanır})
+  \item İzinde geçirilecek adres, il ve ilçe bilgilerini gir
+  \item Gerekli evrakları ekle
+  \item Giden evrak: Konu + Açıklama yaz
+        (Açıklama: Hangi yıla ait? Örn: 2024/3)
+  \item Sıralı amirleri seç $\to$ Kapat
+  \item Kaydet $\to$ Evrak Göster + İmzala Onayla aktif hale gelir
+  \item İmzala/Onayla $\to$ E-imza şifresi $\to$ Tamam
+  \item Onay sürecine gönderildi $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\subsection{Personel Atanma Talep Formu (NAS)}
+
+\begin{center}
+\begin{tabular}{p{4cm}p{9cm}}
+\toprule
+\textbf{Alan} & \textbf{Değer} \\
+\midrule
+Zorunlu atamaya tabi mi? & \textbf{HAYIR} \\
+Talep Türü & \textbf{GENEL} \\
+Talep Nedeni & \textbf{DEĞİŞİKLİK TALEBİ} \\
+Tayin Gerekçesi & \textbf{TALEP} \\
+Maksimum tercih & \textbf{5 kurum} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{bilgi}
+Sıralama değişikliği için \textbf{Yukarı/Aşağı} butonlarını kullanın.
+Tercih silmek için \textbf{Sil} butonunu kullanın.
+Telefon ve e-posta bilgileri eksiksiz doldurulmalıdır.
+\end{bilgi}
+
+\subsection{Emlak ve Servet Bilgileri (Mal Bildirimi)}
+
+\subsubsection{Beyan Zorunluluğu}
+
+\begin{center}
+\begin{tabular}{p{5cm}p{8cm}}
+\toprule
+\textbf{Durum} & \textbf{Beyan Türü} \\
+\midrule
+Göreve ilk girişte & Genel Beyan \\
+Sonu 0 ve 5 ile biten yıllar & Genel Beyan \\
+Mal varlığında değişiklik & Ek Beyan (30 iş günü içinde) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{yasal}
+\textbf{657 sayılı DMK Madde 125:} Belirlenen durum ve sürelerde mal
+bildiriminde bulunmayan memurlar için \textbf{kademe ilerlemesinin
+durdurulması} cezası öngörülmüştür.
+\end{yasal}
+
+\begin{bilgi}
+\begin{itemize}
+  \item Memur \textbf{kendisi, eşi} ve \textbf{velayetindeki çocukları}
+        için bildirim yapar.
+  \item Aynı mal grubunda aynı isim kullanılamaz
+        (Otomobil 1, Otomobil 2 şeklinde girilmeli).
+  \item E-imza yoksa: Önlü arkalı yazdır $\to$ Islak imzala $\to$
+        Kapalı zarf $\to$ İlgili birime teslim.
+\end{itemize}
+\end{bilgi}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{UYAP Mevzuat Programı}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Programın İndirilmesi ve Kurulması}
+
+\begin{adimlar}
+\begin{enumerate}
+  \item \texttt{mevzuat.adalet.gov.tr} adresine git
+  \item ``Mevzuat programını indirmek için tıklayınız'' bağlantısını tıkla
+  \item Güvenlik kodunu gir $\to$ İndir
+  \item Kurulum paketini çalıştır
+        (\textit{Yönetici izni gerekmez; her kullanıcı yapabilir})
+  \item Program her açılışta \textbf{otomatik güncellenir} $\checkmark$
+\end{enumerate}
+\end{adimlar}
+
+\subsection{Mevzuat Programı ile Yapılabilecekler}
+
+\begin{multicols}{2}
+\textbf{Mevzuat Arama Kriterleri:}
+\begin{itemize}
+  \item Mevzuat Türü
+  \item Mevzuat Adı
+  \item Mevzuat Numarası
+  \item Mevzuat içeriği
+  \item Resmî Gazete Tarih ve Sayısı
+\end{itemize}
+
+\columnbreak
+
+\textbf{İçtihat Arama Kriterleri:}
+\begin{itemize}
+  \item İçtihat Türü
+  \item Metin İçeriği
+  \item Daire/Kurul Adı
+  \item Esas Numarası
+  \item Karar Numarası
+  \item Aranacak Kavram
+\end{itemize}
+\end{multicols}
+
+\begin{center}
+\begin{tabular}{lp{9cm}}
+\toprule
+\textbf{Erişilebilecek İçerik} & \textbf{Kapsam} \\
+\midrule
+Güncel mevzuat       & Her gün güncellenen tüm mevzuat \\
+Yüksek yargı içtihadı & 38.000'i aşan karar \\
+Anayasa Mahkemesi    & Tüm kararlar \\
+AİHM                 & Türkiye ile ilgili kararlar \\
+Yargıtay / Danıştay  & Emsal kararlar \\
+Uyuşmazlık Mahkemesi & Tüm kararlar \\
+Adalet Dergisi       & Yayımlanan makaleler \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Ölçme ve Değerlendirme}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{center}
+\large\bfseries
+10 Soruluk Değerlendirme Testi\\[0.3cm]
+\normalsize (Her soru 10 puan --- Toplam 100 puan)
+\end{center}
+
+\begin{enumerate}
+  \item UYAP'ın temel amacı aşağıdakilerden hangisidir?\\
+    A) Adalet hizmetlerini hızlı, güvenilir ve etkin yürütmek \quad
+    B) Mahkemelerde dosya sayısını azaltmak\\
+    C) İnternet hizmetlerini yaygınlaştırmak \quad
+    D) Sadece vatandaşların dosya sorgulamasını sağlamak\\
+    E) Evrak taramasını zorunlu hale getirmek
+
+  \item UYAP'ta veri girişinin doğru, eksiksiz ve zamanında
+        yapılmamasının sonucu aşağıdakilerden hangisidir?\\
+    A) İnternet kesintilerinin artması \quad
+    B) Adli istatistiklerin doğru üretilememesi\\
+    C) Evrakların otomatik imzalanması \quad
+    D) Personelin izinlerinin iptal edilmesi\\
+    E) Yeni mevzuatın yayımlanamaması
+
+  \item E-imza parolası hangi kurum tarafından üretilir?\\
+    A) Adalet Bakanlığı \quad
+    B) UYAP Teknik Ofis Yetkilisi\\
+    C) TÜBİTAK Kamu Sertifikasyon Merkezi \quad
+    D) Yargıtay Bilgi İşlem\\
+    E) Maliye Bakanlığı
+
+  \item UYAP Doküman Editörü'nün belgeyi varsayılan olarak kaydettiği
+        dosya uzantısı nedir?\\
+    A) .doc \quad B) .udf \quad C) .pdf \quad D) .rtf \quad E) .odt
+
+  \item Aşağıdakilerden hangisi UYAP'ın sağladığı faydalardan biri
+        \textbf{değildir}?\\
+    A) Yargı birimleri arasında hızlı elektronik yazışma \quad
+    B) Veri bütünlüğünün sağlanması\\
+    C) Temyiz dosyalarının elektronik gönderilmesi \quad
+    D) Mahkeme kararlarının otomatik hazırlanması\\
+    E) Online talimat işlemlerinin yapılması
+
+  \item Doküman Editöründe imzalı evrakta değişiklik yapılırsa ne olur?\\
+    A) Sistem değişikliği kabul etmez. \quad
+    B) Eski imza geçerli kalır.\\
+    C) Değişiklik sonrası evrakın tekrar imzalanması gerekir.\\
+    D) Evrak kendiliğinden iptal olur. \quad
+    E) Evrak otomatik PDF'e dönüşür.
+
+  \item UYAP Personel Uygulamaları menüsünden yapılabilecek işlemlerden
+        biri aşağıdakilerden hangisidir?\\
+    A) Mahkeme tensip tutanağı hazırlamak \quad
+    B) TAKBİS kayıtlarını düzenlemek\\
+    C) Disiplin cezası vermek \quad
+    D) Elektronik imza sertifikası üretmek\\
+    E) Aile fert bilgilerini güncellemek
+
+  \item İzin Talep Formunda izin süresi nasıl hesaplanır?\\
+    A) Kullanıcı manuel hesaplar.\\
+    B) Sadece izin amiri onaylayınca hesaplanır.\\
+    C) Sistem ayrılış ve dönüş tarihine göre otomatik hesaplar.\\
+    D) MEB izin çizelgesine göre hesaplanır.\\
+    E) Personel Dairesi hesaplar.
+
+  \item UYAP Mevzuat Programı aşağıdakilerden hangisini sağlar?\\
+    A) Tutuklu bilgilerinin kaydını sağlar.\\
+    B) Günlük güncellenen mevzuata erişimi sağlar.\\
+    C) Personel izin sürelerinin hesabını yapar.\\
+    D) Elektronik imza doğrulamasını yapar.\\
+    E) Cezaevi yemek listelerini düzenler.
+
+  \item UYAP'a girilen veri hangi hukuki niteliğe sahiptir?\\
+    A) Tavsiye niteliği taşır. \quad
+    B) Tutanak niteliğindedir.\\
+    C) Belge değeri yoktur. \quad
+    D) Bilgi formu yerine geçer.\\
+    E) Resmî yazı hükmündedir.
+\end{enumerate}
+
+\vspace{1cm}
+\begin{center}
+\begin{tcolorbox}[colback=uyapBlue!10,colframe=uyapBlue,
+                  title={\color{white}\bfseries Cevap Anahtarı},
+                  width=12cm]
+\centering\large
+\begin{tabular}{cccccccccc}
+1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\hline
+\textbf{A} & \textbf{B} & \textbf{C} & \textbf{B} & \textbf{D} &
+\textbf{C} & \textbf{E} & \textbf{C} & \textbf{B} & \textbf{E}
+\end{tabular}
+\end{tcolorbox}
+\end{center}
+
+% ─── KAYNAKÇA ───────────────────────────────────────────────────────────────
+\newpage
+\section*{Kaynakça}
+\addcontentsline{toc}{section}{Kaynakça}
+
+\begin{itemize}
+  \item Adalet Bakanlığı CTEGM --- İnfaz ve Koruma Memurları Temel
+        Eğitim Kitabı, Bölüm 9 (s.\ 347--424)
+  \item 53/1 Sayılı UYAP Genelgesi, 30/03/2007
+  \item \url{http://www.uyap.gov.tr}
+  \item \url{http://www.kamusm.gov.tr}
+  \item \url{http://www.mevzuat.adalet.gov.tr}
+  \item 657 Sayılı Devlet Memurları Kanunu
+  \item 5275 Sayılı Ceza ve Güvenlik Tedbirlerinin
+        İnfazı Hakkında Kanun
+  \item 6698 Sayılı Kişisel Verilerin Korunması Kanunu (KVKK)
+\end{itemize}
+
+\end{document}
