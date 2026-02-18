@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UYAP Quiz — Temel Bilgisi</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --secondary: #2980b9;
+    --accent: #e74c3c;
+    --success: #27ae60;
+    --warning: #f39c12;
+    --light: #ecf0f1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a3a5c 0%, #2980b9 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+  }
+  .header-left h1 { font-size: 1.1rem; font-weight: 700; }
+  .header-left p { font-size: 0.78rem; opacity: 0.75; }
+  .nav-links { display: flex; gap: 8px; }
+  .nav-link {
+    padding: 7px 14px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .nav-link:hover { background: rgba(255,255,255,0.2); }
+  /* QUIZ WRAPPER */
+  .quiz-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .quiz-container {
+    background: #fff;
+    border-radius: 24px;
+    max-width: 760px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    overflow: hidden;
+  }
+  /* QUIZ HEADER */
+  .quiz-header {
+    background: var(--primary);
+    color: #fff;
+    padding: 24px 28px 20px;
+  }
+  .quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .quiz-title { font-size: 1.1rem; font-weight: 700; }
+  .quiz-counter {
+    background: rgba(255,255,255,0.15);
+    padding: 5px 14px;
+    border-radius: 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .quiz-progress-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f39c12, #e74c3c);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  .quiz-progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 0.72rem;
+    opacity: 0.7;
+  }
+  /* TOPIC BADGE */
+  .topic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-bottom: 14px;
+  }
+  /* QUESTION BODY */
+  .question-body {
+    padding: 28px 28px 0;
+  }
+  .question-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  /* OPTIONS */
+  .options-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-item {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+  }
+  .option-item:hover:not(.disabled) {
+    border-color: var(--secondary);
+    background: #f0f8ff;
+    transform: translateX(4px);
+  }
+  .option-letter {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--light);
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .option-text {
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.4;
+    flex: 1;
+  }
+  .option-item.correct {
+    border-color: var(--success);
+    background: #d4edda;
+  }
+  .option-item.correct .option-letter {
+    background: var(--success);
+    color: #fff;
+  }
+  .option-item.wrong {
+    border-color: var(--accent);
+    background: #f8d7da;
+  }
+  .option-item.wrong .option-letter {
+    background: var(--accent);
+    color: #fff;
+  }
+  .option-item.disabled { cursor: not-allowed; }
+  /* FEEDBACK */
+  .feedback-box {
+    margin: 20px 28px 0;
+    padding: 16px 18px;
+    border-radius: 12px;
+    display: none;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.show { display: block; }
+  .feedback-correct {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+  .feedback-wrong {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+  .feedback-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* QUIZ FOOTER */
+  .quiz-footer {
+    padding: 20px 28px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 20px;
+  }
+  .score-display {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .score-item {
+    text-align: center;
+    padding: 8px 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+  }
+  .score-num {
+    font-size: 1.4rem;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+  }
+  .score-lbl { font-size: 0.7rem; color: #888; }
+  .btn-next {
+    padding: 12px 28px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-next.show { display: flex; }
+  .btn-next:hover {
+    background: var(--secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(41,128,185,0.4);
+  }
+  /* RESULTS SCREEN */
+  .results-screen {
+    display: none;
+    padding: 40px 28px;
+    text-align: center;
+  }
+  .results-screen.show { display: block; }
+  .results-trophy { font-size: 4rem; margin-bottom: 16px; }
+  .results-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .results-sub {
+    color: #666;
+    font-size: 0.92rem;
+    margin-bottom: 28px;
+  }
+  .results-score-big {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .result-box {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 16px 10px;
+    text-align: center;
+  }
+  .result-box-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .result-box-lbl { font-size: 0.75rem; color: #888; }
+  .results-bar {
+    background: #eee;
+    border-radius: 8px;
+    height: 14px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .results-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 1.5s ease;
+  }
+  .result-message {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    text-align: left;
+  }
+  .answer-review {
+    text-align: left;
+    margin-bottom: 24px;
+  }
+  .answer-review h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+  .answer-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 0.82rem;
+  }
+  .answer-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+  .answer-q { color: #444; line-height: 1.5; flex: 1; }
+  .answer-q strong { color: var(--primary); }
+  .results-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-restart {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-restart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26,58,92,0.4);
+  }
+  .btn-home {
+    padding: 12px 28px;
+    background: #fff;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-home:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  /* START SCREEN */
+  .start-screen {
+    padding: 40px 28px;
+    text-align: center;
+  }
+  .start-icon { font-size: 4rem; margin-bottom: 16px; }
+  .start-screen h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .start-screen p {
+    color: #666;
+    font-size: 0.92rem;
+    margin-bottom: 28px;
+    line-height: 1.7;
+  }
+  .start-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .start-info-item {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .start-info-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+  }
+  .start-info-lbl { font-size: 0.72rem; color: #888; }
+  .btn-start {
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #f39c12, #e74c3c);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(231,76,60,0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn-start:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(231,76,60,0.5);
+  }
+  @media (max-width: 600px) {
+    .quiz-header, .question-body, .quiz-footer, .results-screen, .start-screen {
+      padding-left: 18px; padding-right: 18px;
+    }
+    .feedback-box { margin-left: 18px; margin-right: 18px; }
+    .results-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <h1>📝 UYAP Quiz</h1>
+      <p>Temel UYAP Bilgisi — Ölçme ve Değerlendirme</p>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">🏠 Portal</a>
+    <a href="flashcards.html" class="nav-link">🃏 Kartlar</a>
+  </div>
+</div>
+
+<div class="quiz-wrapper">
+  <div class="quiz-container">
+
+    <!-- START SCREEN -->
+    <div class="start-screen" id="start-screen">
+      <div class="start-icon">📋</div>
+      <h2>Temel UYAP Bilgisi Testi</h2>
+      <p>Adalet Bakanlığı CİK Personel Eğitim Kitabı Bölüm 9'a dayalı resmi ölçme ve değerlendirme soruları. Her soru 10 puandır.</p>
+      <div class="start-info-grid">
+        <div class="start-info-item">
+          <span class="start-info-num">10</span>
+          <span class="start-info-lbl">Soru</span>
+        </div>
+        <div class="start-info-item">
+          <span class="start-info-num">100</span>
+          <span class="start-info-lbl">Toplam Puan</span>
+        </div>
+        <div class="start-info-item">
+          <span class="start-info-num">5</span>
+          <span class="start-info-lbl">Seçenek</span>
+        </div>
+        <div class="start-info-item">
+          <span class="start-info-num">~10</span>
+          <span class="start-info-lbl">Dakika</span>
+        </div>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">🚀 Teste Başla</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" style="display:none;">
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <div class="quiz-title">📋 Temel UYAP Bilgisi Testi</div>
+          <div class="quiz-counter" id="q-counter">Soru 1 / 10</div>
+        </div>
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="q-progress" style="width:10%;"></div>
+        </div>
+        <div class="quiz-progress-labels">
+          <span id="q-answered">0 yanıtlandı</span>
+          <span id="q-remaining">10 kaldı</span>
+        </div>
+      </div>
+
+      <div class="question-body">
+        <div class="topic-badge" id="q-topic">📚 Konu</div>
+        <div class="question-text" id="q-text"></div>
+        <ul class="options-list" id="q-options"></ul>
+      </div>
+
+      <div class="feedback-box" id="q-feedback"></div>
+
+      <div class="quiz-footer">
+        <div class="score-display">
+          <div class="score-item">
+            <span class="score-num" id="s-correct" style="color:#27ae60;">0</span>
+            <span class="score-lbl">Doğru</span>
+          </div>
+          <div class="score-item">
+            <span class="score-num" id="s-wrong" style="color:#e74c3c;">0</span>
+            <span class="score-lbl">Yanlış</span>
+          </div>
+          <div class="score-item">
+            <span class="score-num" id="s-score" style="color:#2980b9;">0</span>
+            <span class="score-lbl">Puan</span>
+          </div>
+        </div>
+        <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+          Sonraki Soru →
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div class="results-screen" id="results-screen">
+    </div>
+
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    topic: "1.1 UYAP'ın Tanımı",
+    text: "UYAP'ın temel amacı aşağıdakilerden hangisidir?",
+    options: [
+      "Adalet hizmetlerini hızlı, güvenilir ve etkin yürütmek",
+      "Mahkemelerde dosya sayısını azaltmak",
+      "İnternet hizmetlerini yaygınlaştırmak",
+      "Sadece vatandaşların dosya sorgulamasını sağlamak",
+      "Evrak taramasını zorunlu hale getirmek"
+    ],
+    correct: 0,
+    explanation: "UYAP; adalet hizmetlerinin en kısa zamanda, en az maliyetle, şeffaf, etkili, verimli, hızlı, güvenilir, tarafsız ve denetlenebilir şekilde yerine getirilmesini temin etmek üzere geliştirilmiştir."
+  },
+  {
+    topic: "1.3 Veri Girişi",
+    text: "UYAP'a veri girişinin doğru, eksiksiz ve zamanında yapılmamasının sonucu aşağıdakilerden hangisidir?",
+    options: [
+      "İnternet kesintilerinin artması",
+      "Adli istatistiklerin doğru üretilememesi",
+      "Evrakların otomatik imzalanması",
+      "Personelin izinlerinin iptal edilmesi",
+      "Yeni mevzuatın yayımlanamaması"
+    ],
+    correct: 1,
+    explanation: "UYAP'a verilerin yanlış ve geç girilmesi durumunda doğru adli istatistiki bilgiler üretilemeyecek; kişilerin somut hak kayıplarına, mağduriyetlere ve kurum zararına yol açabilecektir."
+  },
+  {
+    topic: "1.3.5 E-İmza Parolası",
+    text: "E-imza parolası hangi kurum tarafından üretilir?",
+    options: [
+      "Adalet Bakanlığı",
+      "UYAP Teknik Ofis Yetkilisi",
+      "TÜBİTAK Kamu Sertifikasyon Merkezi",
+      "Yargıtay Bilgi İşlem",
+      "Maliye Bakanlığı"
+    ],
+    correct: 2,
+    explanation: "UYAP uygulamalarında kullanılmak üzere ilgili kurumun talebi, Adalet Bakanlığının bilgisi üzerine TÜBİTAK Kamu Sertifikasyon Merkezi tarafından ilgili personele elektronik imza üretilerek gönderilmektedir."
+  },
+  {
+    topic: "2. UYAP Doküman Editörü",
+    text: "UYAP Doküman Editörü'nün belgeyi varsayılan olarak kaydettiği dosya uzantısı nedir?",
+    options: [
+      ".doc",
+      ".udf",
+      ".pdf",
+      ".rtf",
+      ".odt"
+    ],
+    correct: 1,
+    explanation: "Editör otomatik olarak dosyaları .udf biçiminde kaydeder. Belgeyi .udf dışında bir biçimde kaydetmek için doküman tipi listesinden istenen dosya biçimi seçilebilir."
+  },
+  {
+    topic: "1.2 UYAP'ın Faydaları",
+    text: "Aşağıdakilerden hangisi UYAP'ın sağladığı faydalardan biri değildir?",
+    options: [
+      "Yargı birimleri arasında hızlı elektronik yazışma",
+      "Veri bütünlüğünün sağlanması",
+      "Temyiz dosyalarının elektronik gönderilmesi",
+      "Mahkeme kararlarının otomatik hazırlanması",
+      "Online talimat işlemlerinin yapılması"
+    ],
+    correct: 3,
+    explanation: "UYAP, standart şablonlar aracılığıyla belge hazırlamayı kolaylaştırır; ancak mahkeme kararlarını otomatik olarak hazırlamaz. Karar verme yetkisi daima yargı makamlarına aittir."
+  },
+  {
+    topic: "2.3 Doküman İmzalama",
+    text: "Doküman Editöründe imzalı evrakta değişiklik yapılırsa ne olur?",
+    options: [
+      "Sistem değişikliği kabul etmez",
+      "Eski imza geçerli kalır",
+      "Değişiklik sonrası evrakın tekrar imzalanması gerekir",
+      "Evrak kendiliğinden iptal olur",
+      "Evrak otomatik PDF'e dönüşür"
+    ],
+    correct: 2,
+    explanation: "İmzalı bir evrakta değişiklik yapılması durumunda dokümanda bulunan imza bilgileri kaybolur. İmzalı bir evrakta yapılacak değişiklik sonrası evrakın tekrar e-imza ile imzalanması gerekmektedir."
+  },
+  {
+    topic: "3. Personel Uygulamaları",
+    text: "UYAP Personel Uygulamaları menüsünden yapılabilecek işlemlerden biri aşağıdakilerden hangisidir?",
+    options: [
+      "Mahkeme tensip tutanağı hazırlamak",
+      "TAKBİS kayıtlarını düzenlemek",
+      "Disiplin cezası vermek",
+      "Elektronik imza sertifikası üretmek",
+      "Aile fert bilgilerini güncellemek"
+    ],
+    correct: 4,
+    explanation: "Personel Uygulamaları → Ortak İşlemler rolü üzerinden özlük bilgileri, aile fert bilgileri güncelleme, izin talebi, mal bildirimi ve NAS atama talebi işlemleri yapılabilmektedir."
+  },
+  {
+    topic: "3.2 İzin Bilgileri",
+    text: "İzin Talep Formunda izin süresi nasıl hesaplanır?",
+    options: [
+      "Kullanıcı manuel hesaplar",
+      "Sadece izin amiri onaylayınca hesaplanır",
+      "Sistem ayrılış ve dönüş tarihine göre otomatik hesaplar",
+      "MEB izin çizelgesine göre hesaplanır",
+      "Personel Dairesi hesaplar"
+    ],
+    correct: 2,
+    explanation: "İzine Ayrılış Tarihi ve İzin Bitiş Tarihi girildiğinde İzin Süresi (Gün) otomatik olarak sistem tarafından hesaplanmaktadır."
+  },
+  {
+    topic: "4. UYAP Mevzuat Programı",
+    text: "UYAP Mevzuat Programı aşağıdakilerden hangisini sağlar?",
+    options: [
+      "Tutuklu bilgilerinin kaydını sağlar",
+      "Günlük güncellenen mevzuata erişimi sağlar",
+      "Personel izin sürelerinin hesabını yapar",
+      "Elektronik imza doğrulamasını yapar",
+      "Cezaevi yemek listelerini düzenler"
+    ],
+    correct: 1,
+    explanation: "UYAP Mevzuat Programı; günlük güncellenen mevzuata, 38.000'i aşan Yüksek Yargı içtihadına, Anayasa Mahkemesi kararlarına, AİHM kararlarına ve emsal kararlara erişim sağlar."
+  },
+  {
+    topic: "Genelge 53/1",
+    text: "UYAP'a girilen veri hangi hukuki niteliğe sahiptir?",
+    options: [
+      "Tavsiye niteliği taşır",
+      "Tutanak niteliğindedir",
+      "Belge değeri yoktur",
+      "Bilgi formu yerine geçer",
+      "Resmî yazı hükmündedir"
+    ],
+    correct: 4,
+    explanation: "53/1 Sayılı Genelge Madde 7: 'Ulusal Yargı Ağına girilmiş veri veya bilgi, Bakanlığımıza gönderilmiş resmî yazı hükmündedir.'"
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answered = false;
+let userAnswers = [];
+
+function startQuiz() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  document.getElementById('q-counter').textContent = `Soru ${currentQ + 1} / ${questions.length}`;
+  document.getElementById('q-progress').style.width = `${((currentQ) / questions.length) * 100}%`;
+  document.getElementById('q-answered').textContent = `${currentQ} yanıtlandı`;
+  document.getElementById('q-remaining').textContent = `${questions.length - currentQ} kaldı`;
+  document.getElementById('q-topic').textContent = `📚 ${q.topic}`;
+  document.getElementById('q-text').textContent = q.text;
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+  const optList = document.getElementById('q-options');
+  optList.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.className = 'option-item';
+    li.innerHTML = `
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-text">${opt}</div>
+    `;
+    li.onclick = () => selectAnswer(i);
+    optList.appendChild(li);
+  });
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback-box';
+  fb.innerHTML = '';
+  document.getElementById('btn-next').classList.remove('show');
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const items = document.querySelectorAll('.option-item');
+  items.forEach(item => item.classList.add('disabled'));
+  const isCorrect = idx === q.correct;
+  items[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    items[q.correct].classList.add('correct');
+  }
+  if (isCorrect) {
+    correctCount++;
+    score += 10;
+  } else {
+    wrongCount++;
+  }
+  userAnswers.push({ q: q.text, userIdx: idx, correctIdx: q.correct, correct: isCorrect, options: q.options });
+  document.getElementById('s-correct').textContent = correctCount;
+  document.getElementById('s-wrong').textContent = wrongCount;
+  document.getElementById('s-score').textContent = score;
+  const fb = document.getElementById('q-feedback');
+  fb.className = `feedback-box ${isCorrect ? 'feedback-correct' : 'feedback-wrong'} show`;
+  fb.innerHTML = `
+    <div class="feedback-title">
+      ${isCorrect ? '✅ Doğru!' : '❌ Yanlış!'}
+    </div>
+    <div>${q.explanation}</div>
+  `;
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = currentQ < questions.length - 1 ? 'Sonraki Soru →' : '📊 Sonuçları Gör';
+  nextBtn.classList.add('show');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < questions.length) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.classList.add('show');
+  const pct = Math.round((score / 100) * 100);
+  let trophy, msg, msgClass;
+  if (score >= 90) {
+    trophy = '🏆'; msg = 'Mükemmel! Tüm konulara hâkimsiniz. UYAP bilginiz üst düzeyde.'; msgClass = 'feedback-correct';
+  } else if (score >= 70) {
+    trophy = '🥈'; msg = 'Başarılı! Temel UYAP bilginiz yeterli seviyede. Eksik konuları gözden geçirin.'; msgClass = 'feedback-correct';
+  } else if (score >= 50) {
+    trophy = '📚'; msg = 'Geçer not. Konuları tekrar edin ve flash kartları kullanarak çalışmaya devam edin.'; msgClass = 'alert-warning';
+  } else {
+    trophy = '🔄'; msg = 'Yetersiz. Ders materyalini baştan okuyun ve flash kartlarla çalışın, ardından tekrar deneyin.'; msgClass = 'feedback-wrong';
+  }
+  const reviewHTML = userAnswers.map((a, i) => `
+    <div class="answer-row">
+      <div class="answer-icon">${a.correct ? '✅' : '❌'}</div>
+      <div class="answer-q">
+        <strong>S${i+1}:</strong> ${a.q.substring(0, 80)}...<br>
+        ${!a.correct ? `<span style="color:#e74c3c;font-size:0.78rem;">Seçtiğiniz: ${a.options[a.userIdx]} | Doğru: ${a.options[a.correctIdx]}</span>` : '<span style="color:#27ae60;font-size:0.78rem;">Doğru yanıtladınız</span>'}
+      </div>
+    </div>
+  `).join('');
+  rs.innerHTML = `
+    <div class="results-trophy">${trophy}</div>
+    <div class="results-title">Test Tamamlandı!</div>
+    <div class="results-sub">Temel UYAP Bilgisi Ölçme ve Değerlendirme</div>
+    <div class="results-score-big">${score} / 100</div>
+    <div class="results-bar" style="margin-bottom:20px;">
+      <div class="results-bar-fill" id="r-bar" style="width:0%;background:${score>=70?'#27ae60':score>=50?'#f39c12':'#e74c3c'};"></div>
+    </div>
+    <div class="results-grid">
+      <div class="result-box">
+        <span class="result-box-num" style="color:#27ae60;">${correctCount}</span>
+        <span class="result-box-lbl">Doğru</span>
+      </div>
+      <div class="result-box">
+        <span class="result-box-num" style="color:#e74c3c;">${wrongCount}</span>
+        <span class="result-box-lbl">Yanlış</span>
+      </div>
+      <div class="result-box">
+        <span class="result-box-num" style="color:#2980b9;">${pct}%</span>
+        <span class="result-box-lbl">Başarı</span>
+      </div>
+    </div>
+    <div class="result-message ${msgClass}" style="padding:14px 16px;border-radius:12px;margin-bottom:20px;font-size:0.88rem;border:1px solid rgba(0,0,0,0.1);">
+      ${msg}
+    </div>
+    <div class="answer-review">
+      <h3>📋 Yanıt Özeti</h3>
+      ${reviewHTML}
+    </div>
+    <div class="results-btns">
+      <button class="btn-restart" onclick="restartQuiz()">🔄 Tekrar Dene</button>
+      <a href="flashcards.html" class="btn-home">🃏 Flash Kartlar</a>
+      <a href="index.html" class="btn-home">🏠 Portal</a>
+    </div>
+  `;
+  setTimeout(() => {
+    document.getElementById('r-bar').style.width = pct + '%';
+  }, 300);
+}
+
+function restartQuiz() {
+  currentQ = 0; score = 0; correctCount = 0; wrongCount = 0; answered = false; userAnswers = [];
+  document.getElementById('results-screen').className = 'results-screen';
+  document.getElementById('results-screen').innerHTML = '';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('s-correct').textContent = '0';
+  document.getElementById('s-wrong').textContent = '0';
+  document.getElementById('s-score').textContent = '0';
+  loadQuestion();
+}
+</script>
+</body>
+</html>

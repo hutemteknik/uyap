@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UYAP Flash Kartlar</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --secondary: #2980b9;
+    --accent: #e74c3c;
+    --success: #27ae60;
+    --warning: #f39c12;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a3a5c 0%, #2980b9 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .header h1 { font-size: 1.1rem; font-weight: 700; color: #fff; }
+  .header p { font-size: 0.78rem; color: rgba(255,255,255,0.75); }
+  .nav-links { display: flex; gap: 8px; }
+  .nav-link {
+    padding: 7px 14px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .nav-link:hover { background: rgba(255,255,255,0.2); }
+  /* CONTROLS */
+  .controls-bar {
+    max-width: 860px;
+    margin: 28px auto 0;
+    padding: 0 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .filter-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .filter-btn:hover { background: rgba(255,255,255,0.2); }
+  .filter-btn.active {
+    background: rgba(255,255,255,0.9);
+    color: var(--primary);
+    border-color: #fff;
+  }
+  /* PROGRESS */
+  .progress-section {
+    max-width: 860px;
+    margin: 16px auto 0;
+    padding: 0 16px;
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    font-size: 0.85rem;
+  }
+  .prog-bar-wrap {
+    background: rgba(255,255,255,0.2);
+    border-radius: 6px;
+    height: 8px;
+    margin: 8px 0;
+    overflow: hidden;
+  }
+  .prog-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f39c12, #e74c3c);
+    border-radius: 6px;
+    transition: width 0.5s ease;
+  }
+  /* CARD AREA */
+  .card-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px 32px;
+  }
+  /* FLASHCARD */
+  .flashcard-scene {
+    width: 100%;
+    max-width: 760px;
+    height: 340px;
+    perspective: 1200px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  .flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  /* FRONT */
+  .card-front {
+    background: #fff;
+    padding: 28px;
+    justify-content: space-between;
+  }
+  .card-front-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .card-category {
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .card-num {
+    font-size: 0.75rem;
+    color: #aaa;
+    font-weight: 600;
+  }
+  .card-icon-big {
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .card-question {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.55;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-hint {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #bbb;
+    padding-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  /* BACK */
+  .card-back {
+    background: var(--primary);
+    padding: 24px;
+    transform: rotateY(180deg);
+    justify-content: space-between;
+  }
+  .card-back-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .card-back-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .card-answer {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .card-answer h3 {
+    color: #f39c12;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .card-answer p {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  .card-answer ul {
+    list-style: none;
+    padding: 0;
+  }
+  .card-answer ul li {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.82rem;
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .card-answer ul li::before {
+    content: '▸';
+    color: #f39c12;
+    flex-shrink: 0;
+  }
+  .card-answer .highlight {
+    background: rgba(243,156,18,0.2);
+    border: 1px solid rgba(243,156,18,0.4);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #ffd770;
+    line-height: 1.5;
+  }
+  .card-back-hint {
+    text-align: center;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 10px;
+  }
+  /* RATING BUTTONS */
+  .rating-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    max-width: 760px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .rating-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    max-width: 120px;
+  }
+  .rating-btn span { font-size: 0.7rem; font-weight: 400; opacity: 0.85; }
+  .btn-hard { background: #f8d7da; color: #721c24; }
+  .btn-hard:hover { background: #f5c6cb; transform: translateY(-2px); }
+  .btn-ok { background: #fff3cd; color: #856404; }
+  .btn-ok:hover { background: #ffeeba; transform: translateY(-2px); }
+  .btn-easy { background: #d4edda; color: #155724; }
+  .btn-easy:hover { background: #c3e6cb; transform: translateY(-2px); }
+  /* NAV ROW */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    max-width: 760px;
+    width: 100%;
+    justify-content: center;
+  }
+  .nav-arrow {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-arrow:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.7);
+  }
+  .nav-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .flip-btn {
+    padding: 12px 28px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4);
+    color: #fff;
+    border-radius: 24px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .flip-btn:hover {
+    background: rgba(255,255,255,0.25);
+  }
+  /* SUMMARY */
+  .summary-bar {
+    max-width: 760px;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .sum-item {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 8px 16px;
+    text-align: center;
+    color: #fff;
+    min-width: 80px;
+  }
+  .sum-num { font-size: 1.4rem; font-weight: 800; display: block; line-height: 1; }
+  .sum-lbl { font-size: 0.68rem; opacity: 0.75; }
+  /* COMPLETE */
+  .complete-screen {
+    display: none;
+    max-width: 760px;
+    width: 100%;
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px 28px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .complete-screen.show { display: block; }
+  .complete-icon { font-size: 4rem; margin-bottom: 16px; }
+  .complete-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .complete-sub { color: #666; margin-bottom: 24px; font-size: 0.92rem; }
+  .complete-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .cstat {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .cstat-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .cstat-lbl { font-size: 0.72rem; color: #888; }
+  .complete-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cbtn {
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cbtn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .cbtn-primary:hover { background: var(--secondary); transform: translateY(-2px); }
+  .cbtn-outline {
+    background: #fff;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+  }
+  .cbtn-outline:hover { background: var(--primary); color: #fff; transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🃏 UYAP Flash Kartlar</h1>
+    <p>Temel UYAP Bilgisi — 20 Master Kart</p>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">🏠 Portal</a>
+    <a href="quiz.html" class="nav-link">📝 Quiz</a>
+  </div>
+</div>
+
+<div class="controls-bar">
+  <button class="filter-btn active" onclick="filterCards('all', this)">🗂️ Tümü (20)</button>
+  <button class="filter-btn" onclick="filterCards('tanim', this)">⚖️ Tanım & Amaç</button>
+  <button class="filter-btn" onclick="filterCards('parola', this)">🔐 Parolalar</button>
+  <button class="filter-btn" onclick="filterCards('editor', this)">📝 Editör</button>
+  <button class="filter-btn" onclick="filterCards('personel', this)">👤 Personel</button>
+  <button class="filter-btn" onclick="filterCards('mevzuat', this)">📖 Mevzuat</button>
+</div>
+
+<div class="progress-section">
+  <div id="prog-text">Kart <span id="cur-idx">1</span> / <span id="total-count">20</span></div>
+  <div class="prog-bar-wrap">
+    <div class="prog-bar-fill" id="prog-fill" style="width:5%;"></div>
+  </div>
+</div>
+
+<div class="card-area">
+
+  <div class="flashcard-scene" id="card-scene" onclick="flipCard()">
+    <div class="flashcard" id="flashcard">
+      <div class="card-face card-front" id="card-front"></div>
+      <div class="card-face card-back" id="card-back"></div>
+    </div>
+  </div>
+
+  <div class="rating-row" id="rating-row" style="display:none;">
+    <button class="rating-btn btn-hard" onclick="rateCard('hard')">😓 Zor<span>Tekrar göster</span></button>
+    <button class="rating-btn btn-ok" onclick="rateCard('ok')">🤔 Orta<span>Yakında göster</span></button>
+    <button class="rating-btn btn-easy" onclick="rateCard('easy')">😊 Kolay<span>Öğrendim!</span></button>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-arrow" id="btn-prev" onclick="prevCard()">←</button>
+    <button class="flip-btn" onclick="flipCard()">🔄 Çevir</button>
+    <button class="nav-arrow" id="btn-next-card" onclick="nextCard()">→</button>
+  </div>
+
+  <div class="summary-bar" style="margin-top:16px;">
+    <div class="sum-item">
+      <span class="sum-num" id="hard-count" style="color:#e74c3c;">0</span>
+      <span class="sum-lbl">😓 Zor</span>
+    </div>
+    <div class="sum-item">
+      <span class="sum-num" id="ok-count" style="color:#f39c12;">0</span>
+      <span class="sum-lbl">🤔 Orta</span>
+    </div>
+    <div class="sum-item">
+      <span class="sum-num" id="easy-count" style="color:#27ae60;">0</span>
+      <span class="sum-lbl">😊 Kolay</span>
+    </div>
+  </div>
+
+  <div class="complete-screen" id="complete-screen">
+    <div class="complete-icon">🎉</div>
+    <div class="complete-title">Tüm Kartlar Tamamlandı!</div>
+    <div class="complete-sub">Temel UYAP Bilgisi Flash Kart çalışması bitti.</div>
+    <div class="complete-stats">
+      <div class="cstat">
+        <span class="cstat-num" id="c-hard" style="color:#e74c3c;"></span>
+        <span class="cstat-lbl">😓 Zor</span>
+      </div>
+      <div class="cstat">
+        <span class="cstat-num" id="c-ok" style="color:#f39c12;"></span>
+        <span class="cstat-lbl">🤔 Orta</span>
+      </div>
+      <div class="cstat">
+        <span class="cstat-num" id="c-easy" style="color:#27ae60;"></span>
+        <span class="cstat-lbl">😊 Kolay</span>
+      </div>
+    </div>
+    <div class="complete-btns">
+      <button class="cbtn cbtn-primary" onclick="restartCards()">🔄 Baştan Başla</button>
+      <a href="quiz.html" class="cbtn cbtn-primary">📝 Quize Geç</a>
+      <a href="index.html" class="cbtn cbtn-outline">🏠 Portal</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const allCards = [
+  {
+    cat: 'tanim', catLabel: 'Tanım & Amaç', catColor: '#e8f4fd', catTextColor: '#2980b9',
+    icon: '⚖️',
+    q: "UYAP'ın açılımı ve temel tanımı nedir?",
+    a: {
+      title: "Ulusal Yargı Ağı Projesi",
+      points: [
+        "UYAP = Ulusal Yargı Ağı Projesi",
+        "Adalet hizmetlerini şeffaf, hızlı, güvenilir ve denetlenebilir kılar",
+        "Adalet Bakanlığı Bilgi İşlem Dairesi Başkanlığı tarafından yürütülür",
+        "Türkiye'deki e-devlet uygulamalarının parçasıdır",
+        "Merkezi bilişim sistemidir"
+      ],
+      highlight: null
+    }
+  },
+  {
+    cat: 'tanim', catLabel: 'Tanım & Amaç', catColor: '#e8f4fd', catTextColor: '#2980b9',
+    icon: '🏛️',
+    q: "UYAP hangi kurumları kapsamaktadır?",
+    a: {
+      title: "UYAP'ın Kapsamı",
+      points: [
+        "Tüm mahkemeler ve savcılık birimleri",
+        "Ceza infaz kurumları (cezaevleri)",
+        "Diğer tüm yargı birimleri",
+        "Adalet Bakanlığı merkez ve taşra teşkilatı",
+        "Bağlı/ilgili birimler ve devlet kurumları"
+      ],
+      highlight: null
+    }
+  },
+  {
+    cat: 'tanim', catLabel: 'Tanım & Amaç', catColor: '#e8f4fd', catTextColor: '#2980b9',
+    icon: '🔗',
+    q: "UYAP hangi dış sistemlerle entegre çalışır?",
+    a: {
+      title: "UYAP Entegrasyonları",
+      points: [
+        "MERNİS → Nüfus kaydı, kimlik bilgileri",
+        "Adli Sicil → Sabıka kaydı",
+        "TAKBİS → Tapu ve kadastro",
+        "POLNET → Aranan kişi sorgulama",
+        "Merkez Bankası → Döviz kurları"
+      ],
+      highlight: "Bu entegrasyon sayesinde bilgilere birkaç saniye içinde ulaşılabilmektedir."
+    }
+  },
+  {
+    cat: 'tanim', catLabel: 'Veri Girişi', catColor: '#fef9e7', catTextColor: '#f39c12',
+    icon: '⚠️',
+    q: "UYAP'a girilen veri hangi hukuki niteliğe sahiptir?",
+    a: {
+      title: "53/1 Sayılı Genelge — Madde 7",
+      points: [
+        "Resmî yazı hükmündedir",
+        "Bakanlığa gönderilmiş yazı sayılır",
+        "Doğruluğundan kaydı giren personel sorumludur",
+        "Denetleyen amir de sorumlu tutulur"
+      ],
+      highlight: "⚠️ 'Ulusal Yargı Ağına girilmiş veri veya bilgi, Bakanlığımıza gönderilmiş resmî yazı hükmündedir.'"
+    }
+  },
+  {
+    cat: 'tanim', catLabel: 'Veri Girişi', catColor: '#fef9e7', catTextColor: '#f39c12',
+    icon: '📊',
+    q: "UYAP'a veri girişinin doğru yapılmamasının sonuçları nelerdir?",
+    a: {
+      title: "Hatalı Veri Girişinin Sonuçları",
+      points: [
+        "Doğru adli istatistik üretilemez",
+        "Adalet politikaları yanılır",
+        "Kişiler hak kaybına uğrar / mağduriyet oluşur",
+        "Kurum zarara uğrar, maliyetler artar",
+        "Teftiş ve denetimler yapılamaz",
+        "Personel hakkında soruşturma açılır"
+      ],
+      highlight: null
+    }
+  },
+  {
+    cat: 'parola', catLabel: 'Parolalar', catColor: '#fdedec', catTextColor: '#e74c3c',
+    icon: '🌐',
+    q: "Portal parolası nasıl alınır?",
+    a: {
+      title: "Portal Parolası Alma",
+      points: [
+        "UYAP Portali → Parola Talep İşlemleri sekmesi",
+        "Adalet Bakanlığı Parola Yenileme Talepleri tıklanır",
+        "Parola Talep Formu doldurulur, çıktı alınır",
+        "Personel ve kurum amiri imzalar",
+        "Forma yazılı numaraya fakslanır",
+        "Bilgi İşlem Dairesi telefon ile iletir"
+      ],
+      highlight: "Değiştirme: Portal → Şifre İşlemleri sekmesi"
+    }
+  },
+  {
+    cat: 'parola', catLabel: 'Parolalar', catColor: '#fdedec', catTextColor: '#e74c3c',
+    icon: '📧',
+    q: "E-posta parolası nasıl oluşturulur?",
+    a: {
+      title: "E-Posta Parolası",
+      points: [
+        "Portal parolası ile UYAP Portalına giriş yapılır",
+        "Şifre İşlemleri sekmesi tıklanır",
+        "E-Posta, Serbest Kürsü ve Haberci Parolası Değiştirme",
+        "Buradan yeni parola oluşturulur"
+      ],
+      highlight: "Ön Koşul: Portal parolası aktif olmalıdır."
+    }
+  },
+  {
+    cat: 'parola', catLabel: 'Parolalar', catColor: '#fdedec', catTextColor: '#e74c3c',
+    icon: '💻',
+    q: "Domain (Bilgisayar Açma) parolası nasıl alınır?",
+    a: {
+      title: "Domain Parolası",
+      points: [
+        "sifredegistirme.uyap.gov.tr adresine gidilir",
+        "Şartlar kabul edilir, sicil ve güvenlik sayısı girilir",
+        "Sistem e-posta adresine onay kodu gönderir",
+        "Onay kodu + yeni şifre girilerek tamamlanır"
+      ],
+      highlight: "Ön Koşul: E-posta aktif + Adalet Bakanlığı etki alanı bilgisayarı. Değiştirme: CTRL+ALT+DELETE → Parola Değiştir"
+    }
+  },
+  {
+    cat: 'parola', catLabel: 'Parolalar', catColor: '#fdedec', catTextColor: '#e74c3c',
+    icon: '✍️',
+    q: "E-İmza parolası kim tarafından üretilir ve nasıl oluşturulur?",
+    a: {
+      title: "E-İmza Parolası",
+      points: [
+        "TÜBİTAK Kamu Sertifikasyon Merkezi (KamuSM) üretir",
+        "kamusm.gov.tr → Bireysel İşlemler → Şifreli Giriş",
+        "TC No + Güvenlik Sözcüğü girilir",
+        "Telefon numarası doğrulanır → ONAY tıklanır",
+        "SMS ile onay kodu gelir → Kod girilir",
+        "Sisteme giriş yapılarak parola oluşturulur"
+      ],
+      highlight: "Kurumun talebi + Adalet Bakanlığının bilgisi üzerine üretilir."
+    }
+  },
+  {
+    cat: 'editor', catLabel: 'Doküman Editörü', catColor: '#f0e6ff', catTextColor: '#8e44ad',
+    icon: '📥',
+    q: "UYAP Doküman Editörü nasıl kurulur?",
+    a: {
+      title: "3 Adımlı Kurulum",
+      points: [
+        "1. Java (32 bit) → java.com/tr → İndir → Kur",
+        "2. E-imza kart okuyucu sürücüleri yüklenir",
+        "3. uyap.gov.tr → UYAP Kelime İşlemci → İndir → ZIP çıkart → Kur"
+      ],
+      highlight: null
+    }
+  },
+  {
+    cat: 'editor', catLabel: 'Doküman Editörü', catColor: '#f0e6ff', catTextColor: '#8e44ad',
+    icon: '💾',
+    q: "Doküman Editörü'nün varsayılan dosya formatı nedir? Desteklenen formatlar nelerdir?",
+    a: {
+      title: "Dosya Formatları",
+      points: [
+        "Varsayılan format: .udf",
+        "Diğer desteklenen: .usf, .doc, .pdf, .odt, .rtf, .tif, .jpg",
+        "İlk kayıt: Dosya → Farklı Kaydet → Konum → Kaydet",
+        "Çalışırken: Hızlı Erişim → Kaydet simgesi"
+      ],
+      highlight: "Tümünü Farklı Kaydet: .udf → .doc/.odt/.pdf/.rtf dönüşümü (C'de LibreOffice/OpenOffice gerekli)"
+    }
+  },
+  {
+    cat: 'editor', catLabel: 'Doküman Editörü', catColor: '#f0e6ff', catTextColor: '#8e44ad',
+    icon: '✍️',
+    q: "Doküman Editöründe e-imza ile belge nasıl imzalanır?",
+    a: {
+      title: "E-İmza İle İmzalama",
+      points: [
+        "1. E-imzayı bilgisayara tak",
+        "2. Araçlar → İmza Kütüphanesi → İlgili kart seç",
+        "3. İmzala simgesine tıkla",
+        "4. E-imza şifresini gir → Tamam",
+        "5. Sağ üst köşede kurdele görünür (onay)"
+      ],
+      highlight: "⚠️ İmzalı evrakta değişiklik yapılırsa imza kaybolur! Evrak yeniden imzalanmalıdır."
+    }
+  },
+  {
+    cat: 'editor', catLabel: 'Doküman Editörü', catColor: '#f0e6ff', catTextColor: '#8e44ad',
+    icon: '🖨️',
+    q: "Belge yazdırma işlemi nasıl yapılır? Web ID nedir?",
+    a: {
+      title: "Belge Yazdırma",
+      points: [
+        "Dosya → Yazdır",
+        "Kopya sayısı, yazıcı ve sayfa düzeni ayarlanır",
+        "Yazdır tıklanır"
+      ],
+      highlight: "💡 Web ID: Evrakın aslının kontrol edilmesini sağlayan koddur. Web ID varsa 'Metni Sayfaya Sığdır' aktif gelir. Web ID'siz yazdırmak için bu seçenek pasife alınır."
+    }
+  },
+  {
+    cat: 'editor', catLabel: 'Doküman Editörü', catColor: '#f0e6ff', catTextColor: '#8e44ad',
+    icon: '🛠️',
+    q: "Görev Çubuğu (Hızlı Erişim) nasıl kişiselleştirilir?",
+    a: {
+      title: "Kişisel Menü ve Görev Çubuğu",
+      points: [
+        "İkona SAĞ TIK → 'Araç Çubuğuna Ekle' → Görev Çubuğuna ekler",
+        "İkona SAĞ TIK → 'Kişisel Menüye Ekle' → Kişisel Menüye ekler",
+        "Kaldırmak için: Çubuk/menüdeki ikona SAĞ TIK → Kaldır",
+        "Alt/F10: Menülere hızlı erişim",
+        "Ctrl+F1: Menüyü gizle/göster"
+      ],
+      highlight: null
+    }
+  },
+  {
+    cat: 'personel', catLabel: 'Personel Uygulamaları', catColor: '#e8f8f5', catTextColor: '#1abc9c',
+    icon: '👤',
+    q: "Personel Uygulamaları rolüne nasıl erişilir ve hangi işlemler yapılır?",
+    a: {
+      title: "Personel Uygulamaları Erişimi",
+      points: [
+        "Portal → Kullanıcı Bilgileri → Personel Uygulamaları",
+        "Aktif Görevlendirmeler → Ortak İşlemler",
+        "Özlük Bilgileri, Aile Fert Bilgileri güncelleme",
+        "İzin Talebi işlemleri",
+        "Mal Bildirimi (Emlak ve Servet)",
+        "Personel Atanma Talep Formu (NAS)"
+      ],
+      highlight: null
+    }
+  },
+  {
+    cat: 'personel', catLabel: 'Personel Uygulamaları', catColor: '#e8f8f5', catTextColor: '#1abc9c',
+    icon: '📅',
+    q: "İzin talebi nasıl yapılır? İzin süresi nasıl hesaplanır?",
+    a: {
+      title: "İzin Talep Formu",
+      points: [
+        "Personel İşlemleri → Personel İzin Talep Formu → Yeni Talep",
+        "İzin türü seçilir, ayrılış ve bitiş tarihi girilir",
+        "İzin süresi (gün) sistem tarafından otomatik hesaplanır",
+        "İzin adresi, il ve ilçe girilir",
+        "Sıralı amirler seçilir, e-imza ile onaya sunulur",
+        "Evrak Durumu → İmza aşamaları takip edilir"
+      ],
+      highlight: "Açıklama kısmında hangi yıla ait olduğu yazılır. Örn: 2024/3"
+    }
+  },
+  {
+    cat: 'personel', catLabel: 'Personel Uygulamaları', catColor: '#e8f8f5', catTextColor: '#1abc9c',
+    icon: '📋',
+    q: "NAS (Personel Atanma Talep Formu) nasıl doldurulur?",
+    a: {
+      title: "NAS Atama Talep Formu",
+      points: [
+        "Ortak İşlemler → Personel Atama Talep → 'Zorunlu atamaya tabi mi?' → HAYIR",
+        "Talep Türü: GENEL | Talep Nedeni: DEĞİŞİKLİK TALEBİ",
+        "Tayin Gerekçesi: Talep (eş durumu için aile bilgileri güncel olmalı)",
+        "Maksimum 5 tercih girilir (il, komisyon, birim türü, kurum adı)",
+        "Yukarı/Aşağı ile sıralama değiştirilebilir",
+        "Mazeret belgesi varsa sisteme eklenir → Onayla"
+      ],
+      highlight: "Telefon ve e-posta bilgileri eksiksiz doldurulmalıdır!"
+    }
+  },
+  {
+    cat: 'personel', catLabel: 'Personel Uygulamaları', catColor: '#e8f8f5', catTextColor: '#1abc9c',
+    icon: '🏠',
+    q: "Mal bildirimi ne zaman verilir? Verilmemenin sonucu nedir?",
+    a: {
+      title: "Mal Bildirimi (Emlak ve Servet)",
+      points: [
+        "Göreve İlk Girişte → Başlamadan önce (Genel Beyan)",
+        "Sonu 0 ve 5 ile biten yıllarda (Genel Beyan)",
+        "Mal varlığında değişiklikte 30 iş günü içinde (Ek Beyan)",
+        "Memur: Kendisi + eşi + velayetindeki çocukları için bildirir",
+        "E-imza yoksa: Önlü arkalı yazdır → Islak imza → Kapalı zarf → Teslim"
+      ],
+      highlight: "⚠️ 657 s. Kanun Md. 125: Zamanında bildirim vermemeye kademe ilerlemesinin durdurulması cezası öngörülmüştür."
+    }
+  },
+  {
+    cat: 'mevzuat', catLabel: 'Mevzuat Programı', catColor: '#fef5e7', catTextColor: '#e67e22',
+    icon: '📖',
+    q: "UYAP Mevzuat Programı nasıl indirilir ve ne özellikleri vardır?",
+    a: {
+      title: "UYAP Mevzuat Programı",
+      points: [
+        "mevzuat.adalet.gov.tr → İndirme linki → Güvenlik kodu → İndir",
+        "Yönetici izni gerekmez, her kullanıcı kurabilir",
+        "Program her açılışta otomatik güncellenir",
+        "38.000+ Yüksek Yargı içtihadına erişim",
+        "Günlük güncellenen tüm mevzuat",
+        "Anayasa Mahkemesi, AİHM, Yargıtay, Danıştay kararları"
+      ],
+      highlight: null
+    }
+  },
+  {
+    cat: 'mevzuat', catLabel: 'Genelge 53/1', catColor: '#fef5e7', catTextColor: '#e67e22',
+    icon: '📜',
+    q: "53/1 Sayılı Genelge'ye göre personelin şifre ve yetki sorumluluğu nedir?",
+    a: {
+      title: "53/1 Sayılı Genelge — Temel Yükümlülükler",
+      points: [
+        "Şifre verilen personel o ekrana giriş yapar",
+        "Eksik/yanlış veri → Yetkili kişi ve amir sorumludur",
+        "Personel en az 6 ay aynı görevde tutulur",
+        "Görev değişikliğinde eğitimli personele devir yapılır",
+        "Üstün performans → 657/122. md. ödüllendirme",
+        "Kasıtlı/ihmalkar kullanmama → Adli/idari soruşturma"
+      ],
+      highlight: "Şifrenizi kimseyle paylaşmayın! Her işlem kullanıcı adınıza kayıt altına alınır."
+    }
+  }
+];
+
+let filteredCards = [...allCards];
+let currentIdx = 0;
+let isFlipped = false;
+let ratings = { hard: 0, ok: 0, easy: 0 };
+
+const catColors = {
+  tanim: ['#e8f4fd', '#2980b9'],
+  parola: ['#fdedec', '#e74c3c'],
+  editor: ['#f0e6ff', '#8e44ad'],
+  personel: ['#e8f8f5', '#1abc9c'],
+  mevzuat: ['#fef5e7', '#e67e22']
+};
+
+function renderCard() {
+  if (filteredCards.length === 0) return;
+  const card = filteredCards[currentIdx];
+  const cc = catColors[card.cat] || ['#f8f9fa', '#333'];
+  const front = document.getElementById('card-front');
+  front.innerHTML = `
+    <div>
+      <div class="card-front-top">
+        <span class="card-category" style="background:${cc[0]};color:${cc[1]};">${card.catLabel}</span>
+        <span class="card-num">${currentIdx + 1} / ${filteredCards.length}</span>
+      </div>
+      <div class="card-icon-big">${card.icon}</div>
+      <div class="card-question">${card.q}</div>
+    </div>
+    <div class="card-hint">👆 Kartı çevirmek için tıkla veya 'Çevir' butonuna bas</div>
+  `;
+  const back = document.getElementById('card-back');
+  const listHTML = card.a.points.map(p => `<li>${p}</li>`).join('');
+  const highlightHTML = card.a.highlight ? `<div class="highlight">${card.a.highlight}</div>` : '';
+  back.innerHTML = `
+    <div>
+      <div class="card-back-top">
+        <span class="card-back-label">✅ Cevap</span>
+        <span style="color:rgba(255,255,255,0.5);font-size:0.75rem;">${card.catLabel}</span>
+      </div>
+    </div>
+    <div class="card-answer">
+      <h3>${card.a.title}</h3>
+      <ul>${listHTML}</ul>
+      ${highlightHTML}
+    </div>
+    <div class="card-back-hint">Kartı değerlendirin ↑</div>
+  `;
+  document.getElementById('cur-idx').textContent = currentIdx + 1;
+  document.getElementById('total-count').textContent = filteredCards.length;
+  document.getElementById('prog-fill').style.width = `${((currentIdx + 1) / filteredCards.length) * 100}%`;
+  document.getElementById('btn-prev').disabled = currentIdx === 0;
+  document.getElementById('btn-next-card').disabled = currentIdx === filteredCards.length - 1;
+  document.getElementById('rating-row').style.display = 'none';
+  if (isFlipped) {
+    document.getElementById('flashcard').classList.add('flipped');
+  } else {
+    document.getElementById('flashcard').classList.remove('flipped');
+  }
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+  document.getElementById('rating-row').style.display = isFlipped ? 'flex' : 'none';
+}
+
+function nextCard() {
+  if (currentIdx < filteredCards.length - 1) {
+    currentIdx++;
+    isFlipped = false;
+    renderCard();
+  } else {
+    showComplete();
+  }
+}
+
+function prevCard() {
+  if (currentIdx > 0) {
+    currentIdx--;
+    isFlipped = false;
+    renderCard();
+  }
+}
+
+function rateCard(r) {
+  ratings[r]++;
+  document.getElementById('hard-count').textContent = ratings.hard;
+  document.getElementById('ok-count').textContent = ratings.ok;
+  document.getElementById('easy-count').textContent = ratings.easy;
+  nextCard();
+}
+
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filteredCards = cat === 'all' ? [...allCards] : allCards.filter(c => c.cat === cat);
+  currentIdx = 0;
+  isFlipped = false;
+  document.getElementById('complete-screen').classList.remove('show');
+  document.getElementById('card-scene').style.display = 'block';
+  document.getElementById('rating-row').style.display = 'none';
+  renderCard();
+}
+
+function showComplete() {
+  document.getElementById('card-scene').style.display = 'none';
+  document.getElementById('rating-row').style.display = 'none';
+  const cs = document.getElementById('complete-screen');
+  document.getElementById('c-hard').textContent = ratings.hard;
+  document.getElementById('c-ok').textContent = ratings.ok;
+  document.getElementById('c-easy').textContent = ratings.easy;
+  cs.classList.add('show');
+}
+
+function restartCards() {
+  currentIdx = 0;
+  isFlipped = false;
+  ratings = { hard: 0, ok: 0, easy: 0 };
+  document.getElementById('hard-count').textContent = '0';
+  document.getElementById('ok-count').textContent = '0';
+  document.getElementById('easy-count').textContent = '0';
+  document.getElementById('complete-screen').classList.remove('show');
+  document.getElementById('card-scene').style.display = 'block';
+  renderCard();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    if (!isFlipped) flipCard(); else nextCard();
+  }
+  if (e.key === 'ArrowLeft') prevCard();
+  if (e.key === 'f' || e.key === 'F') flipCard();
+  if (e.key === '1') rateCard('hard');
+  if (e.key === '2') rateCard('ok');
+  if (e.key === '3') rateCard('easy');
+});
+
+renderCard();
+</script>
+</body>
+</html>
