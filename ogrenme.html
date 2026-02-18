@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UYAP Eğitim Portalı | İnteraktif Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+
+        .nav-btn.active {
+            background-color: #eff6ff;
+            border-right: 4px solid #2563eb;
+            color: #1e40af;
+        }
+
+        /* Flashcard Flip Animation */
+        .flip-card { perspective: 1000px; cursor: pointer; height: 200px; }
+        .flip-card-inner {
+            position: relative; width: 100%; height: 100%;
+            text-align: center; transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back {
+            position: absolute; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; padding: 20px; border-radius: 24px;
+        }
+        .flip-card-back { transform: rotateY(180deg); }
+
+        .content-area { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-900 overflow-x-hidden">
+
+    <!-- Header -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-lg"><i class="fa-solid fa-gavel text-white text-xl"></i></div>
+                <div>
+                    <h1 class="font-bold text-lg leading-none">UYAP Eğitim</h1>
+                    <span class="text-[10px] text-blue-600 font-bold uppercase tracking-wider">Dijital Öğrenme Platformu</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-xs font-medium text-slate-600">Sistem Çevrimiçi</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Sidebar -->
+            <aside class="lg:col-span-3 space-y-4">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-24">
+                    <div class="p-5 border-b border-slate-100">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open text-blue-500"></i> EĞİTİM MODÜLLERİ
+                        </h3>
+                    </div>
+                    <div class="p-2" id="sidebar-nav">
+                        <button onclick="loadModule('guide', this)" class="nav-btn w-full flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-50 transition-all text-left group">
+                            <i class="fa-solid fa-book-open text-slate-400 group-hover:text-blue-500 w-5"></i>
+                            <span class="text-sm font-semibold">Uygulama Kılavuzu</span>
+                        </button>
+                        <button onclick="loadModule('errors', this)" class="nav-btn w-full flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-50 transition-all text-left group">
+                            <i class="fa-solid fa-triangle-exclamation text-slate-400 group-hover:text-red-500 w-5"></i>
+                            <span class="text-sm font-semibold">Hata Matrisi</span>
+                        </button>
+                        <button onclick="loadModule('workshop', this)" class="nav-btn w-full flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-50 transition-all text-left group">
+                            <i class="fa-solid fa-vial text-slate-400 group-hover:text-purple-500 w-5"></i>
+                            <span class="text-sm font-semibold">Atölye Senaryoları</span>
+                        </button>
+                        <button onclick="loadModule('cards', this)" class="nav-btn w-full flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-50 transition-all text-left group">
+                            <i class="fa-solid fa-clone text-slate-400 group-hover:text-indigo-500 w-5"></i>
+                            <span class="text-sm font-semibold">Master Kartlar</span>
+                        </button>
+                        <button onclick="loadModule('quiz', this)" class="nav-btn w-full flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-50 transition-all text-left group">
+                            <i class="fa-solid fa-clipboard-check text-slate-400 group-hover:text-orange-500 w-5"></i>
+                            <span class="text-sm font-semibold">Sertifika Testi</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-200">
+                    <h4 class="font-bold text-sm mb-4">Eğitim İlerlemesi</h4>
+                    <div class="w-full bg-blue-400/30 h-2 rounded-full mb-2">
+                        <div id="progress-bar" class="bg-white h-2 rounded-full transition-all duration-500" style="width: 10%;"></div>
+                    </div>
+                    <p id="progress-text" class="text-[10px] text-blue-100 font-medium">%10 Tamamlandı</p>
+                </div>
+            </aside>
+
+            <!-- Content -->
+            <section class="lg:col-span-9">
+                <div id="content-container" class="content-area bg-white rounded-2xl shadow-sm border border-slate-200 p-8 min-h-[600px]">
+                    <div id="welcome-state" class="flex flex-col items-center justify-center h-full py-20 text-center">
+                        <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mb-6"><i class="fa-solid fa-rocket"></i></div>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Başlamaya Hazır Mısınız?</h2>
+                        <p class="text-slate-500 text-sm">Soldaki menüden bir modül seçerek interaktif eğitime başlayın.</p>
+                    </div>
+                    
+                    <div id="module-wrapper" class="hidden">
+                        <div id="module-header" class="mb-8 pb-6 border-b border-slate-100 flex justify-between items-start">
+                            <div>
+                                <h2 id="module-title" class="text-3xl font-black text-slate-800 mb-2">Modül</h2>
+                                <p id="module-subtitle" class="text-slate-500 text-sm italic"></p>
+                            </div>
+                            <div id="module-icon" class="text-4xl text-blue-100"></div>
+                        </div>
+                        <div id="module-body"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        let currentQuizQuestion = 0;
+        let quizScore = 0;
+        let progress = 10;
+
+        const quizData = [
+            { q: "UYAP'ın temel amacı nedir?", a: ["Kağıtsız ofis", "Maaş yönetimi", "Sosyal medya", "Oyun"], c: 0 },
+            { q: "İmzalı bir .udf belgesinde değişiklik yapılırsa ne olur?", a: ["Hiçbir şey olmaz", "İmza bozulur", "Belge silinir", "Bilgisayar kapanır"], c: 1 },
+            { q: "UYAP Portal şifresi nasıl alınır?", a: ["E-devletten", "Amire faks çekerek", "Kendi kendine", "SMS ile"], c: 1 }
+        ];
+
+        const modules = {
+            guide: {
+                title: "Uygulama Kılavuzu",
+                subtitle: "Temel kullanım kuralları",
+                icon: "<i class='fa-solid fa-book-open'></i>",
+                content: `<div class="p-6 bg-blue-50 rounded-2xl border border-blue-100"><h4 class="font-bold mb-2">Sistem Girişi</h4><p class="text-sm">Domain şifrenizi kimseyle paylaşmayınız.</p></div>`
+            },
+            errors: {
+                title: "Hata Matrisi",
+                subtitle: "Kritik hatalar",
+                icon: "<i class='fa-solid fa-triangle-exclamation'></i>",
+                content: `<div class="p-4 border rounded-xl">Tablo içeriği burada listelenecek...</div>`
+            },
+            workshop: {
+                title: "Atölye Senaryoları",
+                subtitle: "Vaka analizleri",
+                icon: "<i class='fa-solid fa-vial'></i>",
+                content: `<div class="p-4 bg-purple-50 rounded-xl">Vaka 1: Şifre Blokesi durumunda ne yapılır?</div>`
+            },
+            cards: {
+                title: "Master Kartlar",
+                subtitle: "Kartlara tıklayarak cevapları görün",
+                icon: "<i class='fa-solid fa-clone'></i>",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front bg-indigo-600 text-white font-bold">UYAP Nedir?</div>
+                                <div class="flip-card-back bg-slate-100 text-slate-800 p-4 text-xs font-medium">Ulusal Yargı Ağı Bilişim Sistemi</div>
+                            </div>
+                        </div>
+                        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front bg-blue-600 text-white font-bold">.udf nedir?</div>
+                                <div class="flip-card-back bg-slate-100 text-slate-800 p-4 text-xs font-medium">UYAP Doküman Editörü formatı</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            quiz: {
+                title: "Sertifika Testi",
+                subtitle: "Kendinizi test edin",
+                icon: "<i class='fa-solid fa-clipboard-check'></i>",
+                content: `<div id="quiz-box" class="text-center py-10">
+                            <button onclick="startQuiz()" class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold">SINAVI BAŞLAT</button>
+                          </div>`
+            }
+        };
+
+        function updateProgress(val) {
+            progress = Math.min(100, progress + val);
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').innerText = `%${progress} Tamamlandı`;
+        }
+
+        function loadModule(key, el) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(el) el.classList.add('active');
+            
+            document.getElementById('welcome-state').classList.add('hidden');
+            document.getElementById('module-wrapper').classList.remove('hidden');
+            
+            const data = modules[key];
+            document.getElementById('module-title').innerText = data.title;
+            document.getElementById('module-subtitle').innerText = data.subtitle;
+            document.getElementById('module-icon').innerHTML = data.icon;
+            document.getElementById('module-body').innerHTML = data.content;
+            
+            updateProgress(5);
+        }
+
+        function startQuiz() {
+            currentQuizQuestion = 0;
+            quizScore = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if(currentQuizQuestion >= quizData.length) {
+                showResult();
+                return;
+            }
+            const q = quizData[currentQuizQuestion];
+            let optionsHtml = q.a.map((opt, i) => `
+                <button onclick="handleAnswer(${i})" class="w-full text-left p-4 border rounded-xl hover:bg-slate-50 transition-all font-medium mb-2">
+                    ${opt}
+                </button>
+            `).join('');
+
+            document.getElementById('module-body').innerHTML = `
+                <div class="space-y-6 animate-in fade-in duration-500">
+                    <div class="text-xs font-bold text-blue-600 uppercase">Soru ${currentQuizQuestion + 1} / ${quizData.length}</div>
+                    <h3 class="text-xl font-bold text-slate-800">${q.q}</h3>
+                    <div class="space-y-2">${optionsHtml}</div>
+                </div>
+            `;
+        }
+
+        function handleAnswer(index) {
+            if(index === quizData[currentQuizQuestion].c) quizScore++;
+            currentQuizQuestion++;
+            showQuestion();
+        }
+
+        function showResult() {
+            const success = (quizScore / quizData.length) >= 0.6;
+            document.getElementById('module-body').innerHTML = `
+                <div class="text-center py-10 animate-in zoom-in duration-500">
+                    <div class="text-5xl mb-4">${success ? '🎉' : '🔔'}</div>
+                    <h3 class="text-2xl font-black mb-2">${success ? 'Tebrikler!' : 'Tekrar Deneyin'}</h3>
+                    <p class="text-slate-500 mb-6">Skorunuz: ${quizScore} / ${quizData.length}</p>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-6 py-2 rounded-lg font-bold">Yeniden Başlat</button>
+                </div>
+            `;
+            if(success) updateProgress(20);
+        }
+    </script>
+</body>
+</html>
