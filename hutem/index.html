@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UYAP Eğitim Portalı | İnfaz ve Koruma Memurları</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --secondary: #c0392b;
+    --accent: #2980b9;
+    --gold: #f39c12;
+    --light: #ecf0f1;
+    --dark: #2c3e50;
+    --success: #27ae60;
+    --card-shadow: 0 8px 32px rgba(26,58,92,0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--primary) 0%, #2c5f8a 100%);
+    color: white;
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+    z-index: 1;
+  }
+  .header-logo {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, var(--gold), #e67e22);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 4px 15px rgba(243,156,18,0.4);
+    flex-shrink: 0;
+  }
+  .header-text h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .header-text h2 {
+    font-size: 1.1rem;
+    font-weight: 300;
+    opacity: 0.85;
+    margin-top: 5px;
+  }
+  .header-badge {
+    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.15);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+  }
+  .header-badge span { color: var(--gold); }
+
+  /* NAV */
+  nav {
+    background: var(--dark);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+  }
+  nav a {
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+  }
+  nav a:hover, nav a.active {
+    color: white;
+    background: rgba(255,255,255,0.08);
+    border-bottom-color: var(--gold);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* HERO STATS */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    border-top: 4px solid var(--accent);
+    transition: transform 0.3s;
+  }
+  .stat-card:hover { transform: translateY(-4px); }
+  .stat-card:nth-child(2) { border-top-color: var(--success); }
+  .stat-card:nth-child(3) { border-top-color: var(--gold); }
+  .stat-card:nth-child(4) { border-top-color: var(--secondary); }
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+  }
+  .stat-label {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-top: 4px;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(to right, var(--accent), transparent);
+  }
+
+  /* MODULE CARDS */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 50px;
+  }
+  .module-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .module-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(26,58,92,0.2);
+  }
+  .module-header {
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .module-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+  .module-icon.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+  .module-icon.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+  .module-icon.orange { background: linear-gradient(135deg, #f39c12, #e67e22); }
+  .module-icon.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+  .module-info h3 {
+    font-size: 1.15rem;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .module-info p {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+  }
+  .module-body { padding: 0 30px 20px; }
+  .module-topics {
+    list-style: none;
+    border-top: 1px solid #ecf0f1;
+    padding-top: 16px;
+  }
+  .module-topics li {
+    font-size: 0.85rem;
+    color: #555;
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .module-topics li::before {
+    content: '›';
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  .module-footer {
+    padding: 16px 30px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .module-badge {
+    background: var(--accent);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+  }
+  .module-arrow {
+    color: var(--accent);
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+
+  /* QUICK ACCESS */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 50px;
+  }
+  .quick-btn {
+    background: var(--primary);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+  }
+  .quick-btn:hover {
+    background: white;
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: scale(1.03);
+  }
+  .quick-btn .icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+  .quick-btn .label { font-size: 0.9rem; font-weight: 600; }
+
+  /* TIMELINE */
+  .timeline {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 40px;
+  }
+  .timeline-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 52px;
+    width: 2px;
+    height: calc(100% - 10px);
+    background: #ecf0f1;
+  }
+  .timeline-dot {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .timeline-dot.blue { background: #ebf5fb; }
+  .timeline-dot.orange { background: #fef9e7; }
+  .timeline-dot.green { background: #eafaf1; }
+  .timeline-content h4 {
+    font-size: 1rem;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .timeline-content p {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+  }
+  .timeline-content .time-badge {
+    display: inline-block;
+    background: var(--light);
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  /* ALERT BOX */
+  .alert {
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .alert.warning {
+    background: #fef9e7;
+    border-left: 4px solid var(--gold);
+  }
+  .alert.info {
+    background: #ebf5fb;
+    border-left: 4px solid var(--accent);
+  }
+  .alert-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .alert-text h4 { color: var(--dark); margin-bottom: 4px; }
+  .alert-text p { font-size: 0.9rem; color: #555; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    color: #bdc3c7;
+    padding: 40px 20px;
+    text-align: center;
+    margin-top: 60px;
+  }
+  footer p { margin-bottom: 8px; font-size: 0.9rem; }
+  footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+  footer .footer-links a { color: #7f8c8d; text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+  footer .footer-links a:hover { color: var(--gold); }
+
+  @media (max-width: 768px) {
+    .header-text h1 { font-size: 1.4rem; }
+    .modules-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-logo">⚖️</div>
+    <div class="header-text">
+      <h1>UYAP EĞİTİM PORTALI</h1>
+      <h2>İnfaz ve Koruma Memurları | Temel UYAP Bilgisi</h2>
+      <div class="header-badge">
+        <span>●</span> Ceza ve Tevkifevleri Genel Müdürlüğü — Bölüm 9
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="active">🏠 Ana Sayfa</a>
+    <a href="materyal.html">📖 Ders Materyali</a>
+    <a href="kartlar.html">🃏 Flash Kartlar</a>
+    <a href="quiz.html">✅ Quiz</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-number">4</div>
+      <div class="stat-label">Ana Modül</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">30</div>
+      <div class="stat-label">Flash Kart</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">10</div>
+      <div class="stat-label">Quiz Sorusu</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Saat Eğitim</div>
+    </div>
+  </div>
+
+  <!-- MODULES -->
+  <h2 class="section-title">📚 Eğitim Modülleri</h2>
+  <div class="modules-grid">
+
+    <a href="materyal.html#modul1" class="module-card">
+      <div class="module-header">
+        <div class="module-icon blue">🏛️</div>
+        <div class="module-info">
+          <h3>Temel UYAP Bilgisi</h3>
+          <p>Modül 1 · Teorik Temel</p>
+        </div>
+      </div>
+      <div class="module-body">
+        <ul class="module-topics">
+          <li>UYAP'ın tanımı ve amaçları</li>
+          <li>UYAP'ın faydaları</li>
+          <li>Veri girişinde dikkat edilecekler</li>
+          <li>Portal, e-posta, domain şifreleri</li>
+          <li>E-imza parolası oluşturma</li>
+        </ul>
+      </div>
+      <div class="module-footer">
+        <span class="module-badge">60 dk</span>
+        <span class="module-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="materyal.html#modul2" class="module-card">
+      <div class="module-header">
+        <div class="module-icon green">📝</div>
+        <div class="module-info">
+          <h3>UYAP Doküman Editörü</h3>
+          <p>Modül 2 · Uygulama</p>
+        </div>
+      </div>
+      <div class="module-body">
+        <ul class="module-topics">
+          <li>Editörün kurulumu</li>
+          <li>Belge kaydetme (.udf formatı)</li>
+          <li>E-imza ile doküman imzalama</li>
+          <li>Belge yazdırma</li>
+          <li>Kişisel menü oluşturma</li>
+        </ul>
+      </div>
+      <div class="module-footer">
+        <span class="module-badge">50 dk</span>
+        <span class="module-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="materyal.html#modul3" class="module-card">
+      <div class="module-header">
+        <div class="module-icon orange">👤</div>
+        <div class="module-info">
+          <h3>Personel Uygulamaları</h3>
+          <p>Modül 3 · Ortak İşlemler</p>
+        </div>
+      </div>
+      <div class="module-body">
+        <ul class="module-topics">
+          <li>Aile fert bilgileri güncelleme</li>
+          <li>İzin talep formu</li>
+          <li>NAS — Atanma talep formu</li>
+          <li>Belge düzenleme</li>
+          <li>Mal bildirimi (emlak ve servet)</li>
+        </ul>
+      </div>
+      <div class="module-footer">
+        <span class="module-badge">50 dk</span>
+        <span class="module-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="materyal.html#modul4" class="module-card">
+      <div class="module-header">
+        <div class="module-icon red">📜</div>
+        <div class="module-info">
+          <h3>UYAP Mevzuat Programı</h3>
+          <p>Modül 4 · Mevzuat Erişimi</p>
+        </div>
+      </div>
+      <div class="module-body">
+        <ul class="module-topics">
+          <li>Programın indirilmesi</li>
+          <li>Mevzuat arama kriterleri</li>
+          <li>İçtihat sorgulama</li>
+          <li>38.000+ yüksek yargı kararı</li>
+          <li>Sık kullanılanlar listesi</li>
+        </ul>
+      </div>
+      <div class="module-footer">
+        <span class="module-badge">15 dk</span>
+        <span class="module-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- QUICK ACCESS -->
+  <h2 class="section-title">⚡ Hızlı Erişim</h2>
+  <div class="quick-grid">
+    <a href="materyal.html" class="quick-btn">
+      <span class="icon">📖</span>
+      <span class="label">Ders Materyali</span>
+    </a>
+    <a href="kartlar.html" class="quick-btn">
+      <span class="icon">🃏</span>
+      <span class="label">Flash Kartlar</span>
+    </a>
+    <a href="quiz.html" class="quick-btn">
+      <span class="icon">✅</span>
+      <span class="label">Sınava Gir</span>
+    </a>
+    <a href="materyal.html#genelge" class="quick-btn">
+      <span class="icon">📋</span>
+      <span class="label">53/1 Genelge</span>
+    </a>
+  </div>
+
+  <!-- TIMELINE -->
+  <h2 class="section-title">⏱️ Eğitim Programı Akışı</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot blue">🔵</div>
+      <div class="timeline-content">
+        <h4>1. Oturum — Temel UYAP Bilgisi</h4>
+        <p>UYAP tanımı, faydaları, veri girişi, şifre/parola yönetimi</p>
+        <span class="time-badge">60 dakika</span>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot orange">🟠</div>
+      <div class="timeline-content">
+        <h4>2. Oturum — UYAP Doküman Editörü</h4>
+        <p>Kurulum, belge kaydetme, e-imza, yazdırma, kişisel menü</p>
+        <span class="time-badge">50 dakika</span>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot green">🟢</div>
+      <div class="timeline-content">
+        <h4>3. Oturum — Personel Uygulamaları & Mevzuat</h4>
+        <p>Özlük, izin, NAS, mal bildirimi, mevzuat programı</p>
+        <span class="time-badge">50 dakika</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="alert warning">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-text">
+      <h4>Yasal Yükümlülük</h4>
+      <p>53/1 Sayılı Genelge uyarınca UYAP'a girilen her veri resmî yazı hükmündedir. Yanlış, eksik veya geç veri girişi hukuki sorumluluk doğurur.</p>
+    </div>
+  </div>
+  <div class="alert info">
+    <div class="alert-icon">ℹ️</div>
+    <div class="alert-text">
+      <h4>Kaynak</h4>
+      <p>Bu portal, Adalet Bakanlığı Ceza ve Tevkifevleri Genel Müdürlüğü İnfaz ve Koruma Memurları Temel Eğitim Kitabı Bölüm 9 (s. 347–424) esas alınarak hazırlanmıştır.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>⚖️ <strong>UYAP Eğitim Portalı</strong> — İnfaz ve Koruma Memurları Temel Eğitimi</p>
+  <p>Adalet Bakanlığı · Ceza ve Tevkifevleri Genel Müdürlüğü · Bölüm 9</p>
+  <div class="footer-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="materyal.html">Ders Materyali</a>
+    <a href="kartlar.html">Flash Kartlar</a>
+    <a href="quiz.html">Quiz</a>
+  </div>
+</footer>
+
+</body>
+</html>

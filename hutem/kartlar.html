@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Kartlar | UYAP Eğitim Portalı</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent: #2980b9;
+    --gold: #f39c12;
+    --dark: #2c3e50;
+    --success: #27ae60;
+    --danger: #e74c3c;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(10px);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; }
+  .topbar a:hover { color: white; }
+  .topbar h1 { color: white; font-size: 1.1rem; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+  /* PROGRESS */
+  .progress-area {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 24px 28px;
+    margin-bottom: 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, #f39c12, #e67e22);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-text { font-size: 0.95rem; white-space: nowrap; }
+  .progress-nums { font-size: 1.4rem; font-weight: 700; white-space: nowrap; }
+
+  /* FILTER TABS */
+  .filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: white;
+    color: var(--primary);
+    border-color: white;
+  }
+
+  /* CARD AREA */
+  .card-area {
+    perspective: 1200px;
+    margin-bottom: 30px;
+  }
+  .flashcard {
+    width: 100%;
+    min-height: 320px;
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 40px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 320px;
+  }
+  .card-front {
+    background: white;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .card-back {
+    background: linear-gradient(135deg, var(--primary), #2c5f8a);
+    transform: rotateY(180deg);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  .card-category {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    align-self: flex-start;
+  }
+  .cat-1 { background: #d6eaf8; color: #1a5276; }
+  .cat-2 { background: #d5f5e3; color: #1e8449; }
+  .cat-3 { background: #fdebd0; color: #784212; }
+  .cat-4 { background: #f2d7d5; color: #922b21; }
+
+  .card-num {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 0.8rem;
+    color: #bbb;
+  }
+  .card-front .card-num { color: #bbb; }
+  .card-back .card-num { color: rgba(255,255,255,0.4); }
+
+  .card-question {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.5;
+    max-width: 600px;
+  }
+  .card-hint {
+    font-size: 0.82rem;
+    color: #aaa;
+    margin-top: 16px;
+  }
+  .flip-indicator {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #bbb;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  .card-answer {
+    font-size: 1.05rem;
+    color: white;
+    line-height: 1.7;
+    max-width: 600px;
+  }
+  .card-answer strong { color: var(--gold); }
+  .card-answer code {
+    background: rgba(255,255,255,0.15);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 13px 28px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-prev { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); }
+  .btn-prev:hover { background: rgba(255,255,255,0.35); }
+  .btn-flip { background: var(--gold); color: white; }
+  .btn-flip:hover { background: #e67e22; transform: scale(1.05); }
+  .btn-next { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); }
+  .btn-next:hover { background: rgba(255,255,255,0.35); }
+  .btn-know { background: var(--success); color: white; }
+  .btn-know:hover { background: #229954; }
+  .btn-retry { background: var(--danger); color: white; }
+  .btn-retry:hover { background: #c0392b; }
+  .btn-shuffle { background: rgba(255,255,255,0.15); color: white; border: 2px solid rgba(255,255,255,0.3); }
+  .btn-shuffle:hover { background: rgba(255,255,255,0.25); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  /* SCORE SUMMARY */
+  .score-summary {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .score-pill {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    backdrop-filter: blur(5px);
+    color: white;
+  }
+  .pill-know { background: rgba(39,174,96,0.6); border: 1px solid rgba(39,174,96,0.8); }
+  .pill-retry { background: rgba(231,76,60,0.6); border: 1px solid rgba(231,76,60,0.8); }
+  .pill-total { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); }
+
+  /* COMPLETE SCREEN */
+  .complete-screen {
+    background: white;
+    border-radius: 24px;
+    padding: 50px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    display: none;
+  }
+  .complete-screen.show { display: block; }
+  .complete-emoji { font-size: 5rem; margin-bottom: 20px; }
+  .complete-screen h2 { font-size: 2rem; color: var(--primary); margin-bottom: 12px; }
+  .complete-screen p { color: #666; font-size: 1rem; margin-bottom: 28px; }
+  .complete-stats { display: flex; gap: 20px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+  .c-stat { padding: 16px 24px; border-radius: 16px; }
+  .c-stat.green { background: #eafaf1; }
+  .c-stat.red   { background: #fdecea; }
+  .c-stat .n    { font-size: 2.5rem; font-weight: 800; }
+  .c-stat.green .n { color: var(--success); }
+  .c-stat.red   .n { color: var(--danger); }
+  .c-stat .l    { font-size: 0.85rem; color: #999; margin-top: 4px; }
+  .btn-restart { background: var(--primary); color: white; padding: 14px 32px; border: none; border-radius: 14px; font-size: 1rem; cursor: pointer; font-weight: 600; }
+  .btn-restart:hover { background: var(--accent); }
+
+  @media (max-width: 600px) {
+    .card-face { padding: 28px 22px; }
+    .card-question { font-size: 1.05rem; }
+    .controls { gap: 8px; }
+    .btn { padding: 11px 18px; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">← Ana Sayfa</a>
+  <h1>🃏 Flash Kartlar</h1>
+  <a href="quiz.html">Sınava Gir →</a>
+</div>
+
+<main>
+
+  <!-- PROGRESS -->
+  <div class="progress-area">
+    <div class="progress-nums" id="cardCounter">1 / 30</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">Devam ediyor...</div>
+  </div>
+
+  <!-- SCORE -->
+  <div class="score-summary">
+    <div class="score-pill pill-know">✓ Biliyor: <span id="knowCount">0</span></div>
+    <div class="score-pill pill-retry">✗ Tekrar: <span id="retryCount">0</span></div>
+    <div class="score-pill pill-total">📚 Toplam: 30</div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-tabs">
+    <button class="filter-btn active" onclick="filterCards('all', this)">Tümü (30)</button>
+    <button class="filter-btn" onclick="filterCards(1, this)">🏛️ Temel UYAP (10)</button>
+    <button class="filter-btn" onclick="filterCards(2, this)">📝 Doküman Editörü (8)</button>
+    <button class="filter-btn" onclick="filterCards(3, this)">👤 Personel (8)</button>
+    <button class="filter-btn" onclick="filterCards(4, this)">📜 Mevzuat (4)</button>
+  </div>
+
+  <!-- CARD -->
+  <div class="card-area" id="cardArea">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="card-face card-front">
+        <span class="card-num" id="cardNum">1/30</span>
+        <span class="card-category" id="cardCat">Kategori</span>
+        <p class="card-question" id="cardQuestion">Yükleniyor...</p>
+        <p class="flip-indicator">Cevap için tıkla 🔄</p>
+      </div>
+      <div class="card-face card-back">
+        <span class="card-num" id="cardNum2">1/30</span>
+        <p class="card-answer" id="cardAnswer">Yükleniyor...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="btn btn-prev" onclick="prevCard()">← Önceki</button>
+    <button class="btn btn-retry" onclick="markCard(false)">✗ Tekrar</button>
+    <button class="btn btn-flip" onclick="flipCard()">🔄 Çevir</button>
+    <button class="btn btn-know" onclick="markCard(true)">✓ Biliyorum</button>
+    <button class="btn btn-next" onclick="nextCard()">Sonraki →</button>
+  </div>
+  <div style="text-align:center; margin-top:16px;">
+    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Karıştır</button>
+  </div>
+
+  <!-- COMPLETE -->
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-emoji" id="completeEmoji">🎉</div>
+    <h2 id="completeTitle">Tebrikler!</h2>
+    <p id="completeMsg">Tüm kartları tamamladınız.</p>
+    <div class="complete-stats">
+      <div class="c-stat green">
+        <div class="n" id="finalKnow">0</div>
+        <div class="l">✓ Biliyorum</div>
+      </div>
+      <div class="c-stat red">
+        <div class="n" id="finalRetry">0</div>
+        <div class="l">✗ Tekrar</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restartCards()">🔄 Yeniden Başla</button>
+  </div>
+
+</main>
+
+<script>
+const allCards = [
+  // KATEGORI 1 - Temel UYAP
+  { id:1, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"UYAP'ın açılımı nedir ve hangi bakanlığa bağlıdır?",
+    a:"<strong>Ulusal Yargı Ağı Projesi</strong>. Adalet Bakanlığı Bilgi İşlem Dairesi Başkanlığı tarafından yönetilir." },
+  { id:2, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"UYAP'ın temel amacı nedir?",
+    a:"Adalet hizmetlerini <strong>en kısa zamanda, en az maliyetle, şeffaf, etkili, verimli, hızlı, güvenilir, tarafsız ve denetlenebilir</strong> şekilde yerine getirmek." },
+  { id:3, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"UYAP hangi sistemlerle entegre çalışır?",
+    a:"<strong>MERNİS</strong> (nüfus), <strong>Adli Sicil</strong> (sabıka), <strong>TAKBİS</strong> (tapu), <strong>POLNET</strong> (aranan kişi), <strong>Merkez Bankası</strong> (döviz kuru)" },
+  { id:4, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"UYAP'a girilen veri hangi hukuki değeri taşır?",
+    a:"53/1 Sayılı Genelge Md. 7 gereğince <strong>Bakanlığa gönderilmiş resmî yazı hükmündedir</strong>." },
+  { id:5, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"Veri girişinde sorumluluk kime aittir?",
+    a:"Veriyi giren personel <strong>ve</strong> o personeli görevlendiren <strong>amir birlikte sorumludur</strong> (Genelge Md. 8)." },
+  { id:6, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"Portal parolası nasıl alınır?",
+    a:"Parola Talep Formu doldurulur → Personel ve kurum amiri imzalar → <strong>Bilgi İşlem Daire Başkanlığına fakslanır</strong> → Telefonla iletilir." },
+  { id:7, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"Domain (bilgisayar açma) parolası hangi adresten alınır?",
+    a:"<code>sifredegistirme.uyap.gov.tr</code> adresinden; e-posta hesabına gelen <strong>SMS onay kodu</strong> ile oluşturulur." },
+  { id:8, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"E-imza parolasını hangi kurum üretir?",
+    a:"<strong>TÜBİTAK Kamu Sertifikasyon Merkezi (KamuSM)</strong>. <code>kamusm.gov.tr</code> üzerinden Bireysel İşlemler → Şifreli Giriş ile parola oluşturulur." },
+  { id:9, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"Hangi durumlarda UYAP şifresi değiştirilebilir?",
+    a:"Portal parolası: UYAP Portal → <strong>Şifre İşlemleri</strong>. Domain: <strong>CTRL+ALT+DELETE → Parola Değiştir</strong>. E-imza: KamuSM sistemi." },
+  { id:10, cat:1, catName:"Temel UYAP", catClass:"cat-1",
+    q:"UYAP'ta personel kaç ay aynı görevde tutulmalıdır?",
+    a:"Genelge Md. 9 uyarınca mümkün olduğunca uzun süreyle, <strong>en az 6 ay</strong> aynı görevde tutulmalıdır." },
+
+  // KATEGORI 2 - Doküman Editörü
+  { id:11, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"UYAP Doküman Editörü belgeleri hangi varsayılan uzantıyla kaydeder?",
+    a:"<strong>.udf</strong> (UDF) formatı. Diğer seçenekler: .usf, .doc, .pdf, .odt, .rtf, .tif, .jpg" },
+  { id:12, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"Doküman Editörünü kurmak için hangi 3 bileşen gereklidir?",
+    a:"1. <strong>Java</strong> (32 bit, java.com/tr)<br>2. <strong>E-imza kart okuyucu sürücüleri</strong><br>3. <strong>UYAP Kelime İşlemci</strong> (uyap.gov.tr)" },
+  { id:13, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"E-imza ile imzalama başarılı olduğunda hangi görsel işaret çıkar?",
+    a:"Doküman Editörü sağ üst köşesinde <strong>kurdele simgesi</strong> görünür. Bu imzanın geçerli olduğunu gösterir." },
+  { id:14, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"İmzalı evrakta değişiklik yapılırsa ne olur?",
+    a:"<strong>İmza bilgileri kaybolur.</strong> Değişiklik sonrası evrak <strong>yeniden e-imza ile imzalanmalıdır</strong>." },
+  { id:15, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"Web ID'li evrakı yazdırırken dikkat edilmesi gereken nedir?",
+    a:"Evrakta Web ID varsa <strong>'Metni Sayfaya Sığdır'</strong> seçeneği aktif gelir. Web ID'siz yazdırmak için bu seçeneği pasife almak gerekir." },
+  { id:16, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"Tümünü Farklı Kaydet özelliği ne işe yarar ve hangi yazılım gerekir?",
+    a:"Birden fazla .udf dosyasını toplu olarak <strong>doc/odt/pdf/rtf</strong> formatına çevirir. C: sürücüsünde <strong>LibreOffice veya OpenOffice</strong> kurulu olması gerekir." },
+  { id:17, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"Editörde menülere klavyeyle nasıl hızlı erişilir?",
+    a:"<strong>Alt veya F10</strong> tuşuna basarak. Menüyü gizlemek için <strong>Ctrl+F1</strong> veya herhangi bir menüye çift tıklanır." },
+  { id:18, cat:2, catName:"Doküman Editörü", catClass:"cat-2",
+    q:"Kişisel Menüye ikon nasıl eklenir ve kaldırılır?",
+    a:"<strong>Eklemek:</strong> İkona sağ tık → 'Kişisel Menüye Ekle'<br><strong>Kaldırmak:</strong> Menüdeki ikona sağ tık → Kaldır" },
+
+  // KATEGORI 3 - Personel Uygulamaları
+  { id:19, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"Personel Uygulamaları modülüne nasıl giriş yapılır?",
+    a:"UYAP Portal → Kullanıcı bilgileri gir → <strong>Personel Uygulamaları Rolü</strong> → Aktif Görevlendirmeler → Ortak İşlemler" },
+  { id:20, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"NAS başvurusunda Eş Durumu tayin gerekçesi seçilirse ne yapılmalıdır?",
+    a:"Eşe ait <strong>çalışma ve görev yeri bilgileri</strong> Aile Fert Bilgileri ekranından mutlaka güncel tutulmalıdır. NAS bu verilerden otomatik çeker." },
+  { id:21, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"İzin talep formunda izin süresi nasıl hesaplanır?",
+    a:"Sistem, <strong>İzne Ayrılış Tarihi ve İzin Bitiş Tarihi</strong> girildiğinde İzin Süresini (Gün) <strong>otomatik hesaplar</strong>." },
+  { id:22, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"NAS'ta en fazla kaç kurum tercih yapılabilir?",
+    a:"En fazla <strong>5 kurum</strong> tercih yapılabilir. Yukarı/Aşağı butonu ile tercih sıralaması değiştirilebilir." },
+  { id:23, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"NAS'ta Talep Türü ve Talep Nedeni nasıl seçilir?",
+    a:"Talep Türü: <strong>GENEL</strong><br>Talep Nedeni: <strong>DEĞİŞİKLİK TALEBİ</strong><br>Tayin Gerekçesi: <strong>Talep</strong>" },
+  { id:24, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"Mal bildirimi kaç farklı türde verilir ve ne zaman?",
+    a:"<strong>Genel Beyan:</strong> Göreve ilk girişte + Sonu 0 ve 5 ile biten yıllarda.<br><strong>Ek Beyan:</strong> Mal varlığında değişiklik olduğunda <strong>30 iş günü</strong> içinde." },
+  { id:25, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"Zamanında mal bildirimi vermemenin yaptırımı nedir?",
+    a:"657 sayılı DMK Md. 125 gereğince <strong>kademe ilerlemesinin durdurulması</strong> cezası uygulanır." },
+  { id:26, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"E-imzası olmayan personel mal bildirimini nasıl sunar?",
+    a:"<strong>Önlü arkalı yazdırır → Islak imzalar → Kapalı zarf içine koyar → Kurum ilgili birimine teslim eder.</strong>" },
+  { id:27, cat:3, catName:"Personel Uygulamaları", catClass:"cat-3",
+    q:"İzin talebinin imza aşamaları nasıl takip edilir?",
+    a:"İzin Talep Formu → <strong>Talep Sorgula</strong> → Admin Evrak Takip → Sorgu Sonuç ekranında <strong>'Evrak Durumu'</strong> satırından takip edilir." },
+
+  // KATEGORI 4 - Mevzuat
+  { id:28, cat:4, catName:"Mevzuat Programı", catClass:"cat-4",
+    q:"UYAP Mevzuat Programı hangi adresten indirilir?",
+    a:"<code>mevzuat.adalet.gov.tr</code> adresinden. Kurulum için <strong>yönetici izni gerekmez</strong>; program her açılışta <strong>otomatik güncellenir</strong>." },
+  { id:29, cat:4, catName:"Mevzuat Programı", catClass:"cat-4",
+    q:"UYAP Mevzuat Programında kaç adet yüksek yargı içtihadına ulaşılabilir?",
+    a:"<strong>38.000'i aşan</strong> Yüksek Yargı içtihadına ulaşılabilir. Bunlara ek olarak AİHM, Anayasa Mahkemesi ve Uyuşmazlık Mahkemesi kararları da mevcuttur." },
+  { id:30, cat:4, catName:"Mevzuat Programı", catClass:"cat-4",
+    q:"İçtihat aramasında kullanılabilecek kriterler nelerdir?",
+    a:"<strong>İçtihat Türü · Metin İçeriği · Daire/Kurul Adı · Esas Numarası · Karar Numarası · Aranacak Kavram</strong>" },
+];
+
+let currentCards = [...allCards];
+let currentIndex = 0;
+let knowCount = 0;
+let retryCount = 0;
+const marked = {};
+
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCards = cat === 'all' ? [...allCards] : allCards.filter(c => c.cat === cat);
+  currentIndex = 0;
+  Object.keys(marked).forEach(k => delete marked[k]);
+  knowCount = 0; retryCount = 0;
+  updateScore();
+  showCard();
+  document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('cardArea').style.display = 'block';
+}
+
+function showCard() {
+  if (currentIndex >= currentCards.length) { showComplete(); return; }
+  const card = currentCards[currentIndex];
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  document.getElementById('cardNum').textContent = (currentIndex+1)+'/'+currentCards.length;
+  document.getElementById('cardNum2').textContent = (currentIndex+1)+'/'+currentCards.length;
+  document.getElementById('cardCat').textContent = card.catName;
+  document.getElementById('cardCat').className = 'card-category ' + card.catClass;
+  document.getElementById('cardQuestion').textContent = card.q;
+  document.getElementById('cardAnswer').innerHTML = card.a;
+  document.getElementById('cardCounter').textContent = (currentIndex+1)+' / '+currentCards.length;
+  document.getElementById('progressFill').style.width = ((currentIndex+1)/currentCards.length*100)+'%';
+  const pct = Math.round((currentIndex+1)/currentCards.length*100);
+  document.getElementById('progressText').textContent = pct < 100 ? pct+'% tamamlandı' : '✓ Tamamlandı!';
+}
+
+function flipCard() {
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+function nextCard() {
+  if (currentIndex < currentCards.length - 1) { currentIndex++; showCard(); }
+  else showComplete();
+}
+function prevCard() {
+  if (currentIndex > 0) { currentIndex--; showCard(); }
+}
+function markCard(know) {
+  const card = currentCards[currentIndex];
+  const prev = marked[card.id];
+  if (prev === true && !know) { knowCount--; retryCount++; }
+  else if (prev === false && know) { retryCount--; knowCount++; }
+  else if (prev === undefined) { know ? knowCount++ : retryCount++; }
+  marked[card.id] = know;
+  updateScore();
+  setTimeout(nextCard, 300);
+}
+function updateScore() {
+  document.getElementById('knowCount').textContent = knowCount;
+  document.getElementById('retryCount').textContent = retryCount;
+}
+function shuffleCards() {
+  for (let i = currentCards.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];
+  }
+  currentIndex = 0;
+  showCard();
+}
+function showComplete() {
+  document.getElementById('cardArea').style.display = 'none';
+  const cs = document.getElementById('completeScreen');
+  cs.classList.add('show');
+  document.getElementById('finalKnow').textContent = knowCount;
+  document.getElementById('finalRetry').textContent = retryCount;
+  const pct = Math.round(knowCount / currentCards.length * 100);
+  document.getElementById('completeEmoji').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '📚';
+  document.getElementById('completeTitle').textContent = pct >= 80 ? 'Mükemmel!' : pct >= 50 ? 'İyi Gidiyor!' : 'Daha Fazla Çalış!';
+  document.getElementById('completeMsg').textContent = 'Başarı oranınız: %'+pct+'. ' + (pct >= 80 ? 'Quiz\'i deneyin!' : 'Tekrar gerektiren kartları gözden geçirin.');
+}
+function restartCards() {
+  currentIndex = 0; knowCount = 0; retryCount = 0;
+  Object.keys(marked).forEach(k => delete marked[k]);
+  updateScore();
+  document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('cardArea').style.display = 'block';
+  showCard();
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextCard();
+  else if (e.key === 'ArrowLeft') prevCard();
+  else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  else if (e.key === 'k' || e.key === 'K') markCard(true);
+  else if (e.key === 'r' || e.key === 'R') markCard(false);
+});
+
+showCard();
+</script>
+</body>
+</html>

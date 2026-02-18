@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ders Materyali | UYAP Eğitim Portalı</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent: #2980b9;
+    --gold: #f39c12;
+    --dark: #2c3e50;
+    --light: #f8f9fa;
+    --success: #27ae60;
+    --danger: #e74c3c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--primary);
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .topbar a { color: #bdc3c7; text-decoration: none; font-size: 0.85rem; }
+  .topbar a:hover { color: var(--gold); }
+  .topbar h2 { font-size: 1rem; font-weight: 600; }
+
+  /* LAYOUT */
+  .layout { display: flex; min-height: calc(100vh - 50px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    background: white;
+    border-right: 1px solid #e0e0e0;
+    padding: 24px 0;
+    position: sticky;
+    top: 50px;
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-title {
+    padding: 0 20px 16px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    font-weight: 700;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 8px;
+  }
+  .sidebar a {
+    display: block;
+    padding: 10px 20px;
+    color: #555;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .sidebar a:hover, .sidebar a.active {
+    background: #f0f7ff;
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .sidebar a.sub {
+    padding-left: 36px;
+    font-size: 0.83rem;
+    color: #777;
+  }
+
+  /* CONTENT */
+  .content {
+    flex: 1;
+    padding: 40px;
+    max-width: 900px;
+  }
+
+  /* SECTION */
+  .module-section {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .module-section-header {
+    background: linear-gradient(135deg, var(--primary), #2c5f8a);
+    color: white;
+    padding: 28px 36px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .module-section-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .module-section-header h2 { font-size: 1.4rem; }
+  .module-section-header p { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
+  .module-section-body { padding: 36px; }
+
+  /* TYPOGRAPHY */
+  h3 {
+    font-size: 1.15rem;
+    color: var(--primary);
+    margin: 28px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  h4 {
+    font-size: 1rem;
+    color: var(--dark);
+    margin: 20px 0 8px;
+  }
+  p { margin-bottom: 14px; color: #444; }
+
+  /* DEFINITION BOX */
+  .definition {
+    background: linear-gradient(135deg, #ebf5fb, #d6eaf8);
+    border-left: 5px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .definition h4 { color: var(--accent); margin: 0 0 8px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+  .definition p { margin: 0; font-size: 0.95rem; color: #2c3e50; }
+
+  /* INFO BOX */
+  .info-box {
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 16px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .info-box.warning { background: #fef9e7; border: 1px solid #f9ca24; }
+  .info-box.danger  { background: #fdecea; border: 1px solid var(--danger); }
+  .info-box.success { background: #eafaf1; border: 1px solid var(--success); }
+  .info-box.info    { background: #ebf5fb; border: 1px solid var(--accent); }
+  .info-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+  .info-box h5 { font-size: 0.9rem; margin-bottom: 4px; color: var(--dark); }
+  .info-box p { margin: 0; font-size: 0.88rem; color: #555; }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: var(--primary); color: white; }
+  th { padding: 12px 16px; text-align: left; font-size: 0.88rem; font-weight: 600; }
+  td { padding: 11px 16px; font-size: 0.88rem; border-bottom: 1px solid #f0f0f0; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) { background: #f8f9fa; }
+  tr:hover { background: #f0f7ff; }
+
+  /* CODE / FLOW */
+  .flow-box {
+    background: #1e272e;
+    color: #ecf0f1;
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .flow-box .comment { color: #f39c12; }
+  .flow-box .step { color: #2ecc71; }
+  .flow-box .arrow { color: #3498db; }
+
+  /* LIST */
+  .styled-list { list-style: none; margin: 12px 0; }
+  .styled-list li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    font-size: 0.92rem;
+    color: #444;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .styled-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: bold;
+  }
+  .styled-list li.cross::before { content: '✗'; color: var(--danger); }
+  .styled-list li.arrow::before { content: '›'; color: var(--accent); font-size: 1.2rem; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .badge.blue  { background: #d6eaf8; color: #1a5276; }
+  .badge.green { background: #d5f5e3; color: #1e8449; }
+  .badge.gold  { background: #fdebd0; color: #784212; }
+  .badge.red   { background: #fdecea; color: #922b21; }
+
+  /* PAROLA STEPS */
+  .steps { counter-reset: step; }
+  .step-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .step-num {
+    counter-increment: step;
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+  }
+  .step-content h5 { margin-bottom: 4px; color: var(--dark); }
+  .step-content p { font-size: 0.88rem; color: #666; margin: 0; }
+
+  /* GENELGE */
+  .genelge {
+    background: #fdfdf7;
+    border: 2px solid #d4ac0d;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin: 24px 0;
+  }
+  .genelge-header {
+    text-align: center;
+    border-bottom: 1px solid #e0c958;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+  .genelge-header h3 { font-size: 1rem; color: #7d6608; border: none; padding: 0; margin: 0; }
+  .genelge-header p { font-size: 0.85rem; color: #999; margin: 4px 0 0; }
+  .genelge p { font-size: 0.9rem; line-height: 1.8; margin-bottom: 12px; color: #333; }
+  .genelge .madde { font-weight: 700; color: #7d6608; }
+
+  /* SCROLL TO TOP */
+  .scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--primary);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    z-index: 999;
+  }
+  .scroll-top:hover { background: var(--accent); transform: translateY(-3px); }
+
+  /* PROGRESS BAR */
+  .reading-progress {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(to right, var(--accent), var(--gold));
+    z-index: 300;
+    transition: width 0.1s;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .content { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html">← Ana Sayfa</a>
+    <span style="color:#555">|</span>
+    <h2>📖 Ders Materyali — Bölüm 9</h2>
+  </div>
+  <div>
+    <a href="quiz.html">Sınava Gir →</a>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-title">İçindekiler</div>
+    <a href="#modul1" class="active">1. Temel UYAP Bilgisi</a>
+    <a href="#tanim" class="sub">1.1 Tanım ve Amaçlar</a>
+    <a href="#fayda" class="sub">1.2 Faydaları</a>
+    <a href="#veri" class="sub">1.3 Veri Girişi Hususları</a>
+    <a href="#sifre" class="sub">1.3.1 Şifre Yönetimi</a>
+    <a href="#portal" class="sub">1.3.2 Portal Parolası</a>
+    <a href="#eposta" class="sub">1.3.3 E-Posta Parolası</a>
+    <a href="#domain" class="sub">1.3.4 Domain Parolası</a>
+    <a href="#eimza" class="sub">1.3.5 E-İmza Parolası</a>
+    <a href="#modul2">2. UYAP Doküman Editörü</a>
+    <a href="#kurulum" class="sub">2.1 Kurulum</a>
+    <a href="#kaydet" class="sub">2.2 Belge Kaydetme</a>
+    <a href="#imzala" class="sub">2.3 Doküman İmzalama</a>
+    <a href="#yazdir" class="sub">2.5 Belge Yazdırma</a>
+    <a href="#menu" class="sub">2.6–2.9 Menü & İkonlar</a>
+    <a href="#modul3">3. Personel Uygulamaları</a>
+    <a href="#ozluk" class="sub">3.1 Özlük İşlemleri</a>
+    <a href="#izin" class="sub">3.2 İzin Bilgileri</a>
+    <a href="#nas" class="sub">3.3 NAS</a>
+    <a href="#belge" class="sub">3.4 Belge Düzenleme</a>
+    <a href="#mal" class="sub">3.5 Mal Bildirimi</a>
+    <a href="#modul4">4. Mevzuat Programı</a>
+    <a href="#genelge">📋 53/1 Sayılı Genelge</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+
+    <!-- ==================== MODÜL 1 ==================== -->
+    <div class="module-section" id="modul1">
+      <div class="module-section-header">
+        <div class="module-section-icon">🏛️</div>
+        <div>
+          <h2>1. Temel UYAP Bilgisi</h2>
+          <p>Tanım · Amaçlar · Faydalar · Veri Girişi · Şifre Yönetimi</p>
+        </div>
+      </div>
+      <div class="module-section-body">
+
+        <h3 id="tanim">1.1 UYAP'ın Tanımı ve Amaçları</h3>
+
+        <div class="definition">
+          <h4>Tanım</h4>
+          <p>UYAP; adalet hizmetlerinin en kısa zamanda, en az maliyetle, <strong>şeffaf, etkili, verimli, hızlı, güvenilir, tarafsız ve denetlenebilir</strong> şekilde yerine getirilmesini temin etmek üzere geliştirilen ve Türkiye'deki e-devlet uygulamalarının bir parçasını oluşturan <strong>elektronik adalet sistemi</strong>dir.</p>
+        </div>
+
+        <p>Adalet Bakanlığı Bilgi İşlem Dairesi Başkanlığı tarafından hayata geçirilmiş merkezi bir bilişim sistemi olarak bütün mahkemeleri, savcılık birimlerini, cezaevlerini, diğer tüm yargı birimlerini ve ilgili devlet kurumlarını kapsamaktadır.</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Entegre Olunan Sistem</th><th>Sağladığı Bilgi</th></tr></thead>
+            <tbody>
+              <tr><td>MERNİS</td><td>Nüfus / kimlik kaydı</td></tr>
+              <tr><td>Adli Sicil</td><td>Sabıka kaydı</td></tr>
+              <tr><td>TAKBİS</td><td>Tapu / taşınmaz kaydı</td></tr>
+              <tr><td>POLNET</td><td>Aranan kişi sorgulama</td></tr>
+              <tr><td>Merkez Bankası</td><td>Döviz kuru bilgisi</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAYDA -->
+        <h3 id="fayda">1.2 UYAP'ın Faydaları</h3>
+        <p>UYAP'ın yargı sistemine sağladığı başlıca katkılar şunlardır:</p>
+
+        <ul class="styled-list">
+          <li class="arrow">Birimlerin tüm faaliyetleri bilgisayar ortamında yürütülür</li>
+          <li class="arrow">Veriler tek yerde tutulur; doğruluk ve tutarlılık sağlanır</li>
+          <li class="arrow">Veri bir kez girilir, tekrar girişe gerek kalmaz</li>
+          <li class="arrow">Birimler arası yazışmalar elektronik ortamda hızlıca yapılır</li>
+          <li class="arrow">Talimat işlemleri online iletilir ve cevaplanır</li>
+          <li class="arrow">Temyiz dosyaları Yargıtay'a elektronik gönderilir</li>
+          <li class="arrow">Tevzi işlemleri otomatik ve adil yapılır</li>
+          <li class="arrow">Kasa hesapları otomatik kontrol edilir</li>
+          <li class="arrow">Teftiş ve denetimler merkezi olarak yapılabilir</li>
+          <li class="arrow">Ceza infaz kurumlarına ait anlık raporlar alınabilir</li>
+        </ul>
+
+        <div class="info-box info">
+          <div class="info-icon">📊</div>
+          <div>
+            <h5>Ceza İnfaz Kurumları için Özel Fayda</h5>
+            <p>Mahkûm ve tutuklu sayıları, kadın/erkek/çocuk ayrımı, suç türleri merkezden anlık raporlanabilmektedir.</p>
+          </div>
+        </div>
+
+        <!-- VERİ GİRİŞİ -->
+        <h3 id="veri">1.3 UYAP'a Veri Girişinde Dikkat Edilecek Hususlar</h3>
+
+        <p>Mevzuat hükümlerine göre UYAP'ın kullanılması <strong>zorunlu</strong> olup görevli personel verileri <strong>doğru, eksiksiz ve zamanında</strong> girmekle yükümlüdür.</p>
+
+        <h4>Veri Giriş Sorunlarının Nedenleri</h4>
+        <ul class="styled-list">
+          <li class="cross">Yeterli bilgi, beceri ve yetkinlik eksikliği</li>
+          <li class="cross">İş yoğunluğu</li>
+          <li class="cross">İş bölümünün bulunmaması</li>
+          <li class="cross">Dikkat eksikliği</li>
+          <li class="cross">Farkındalık eksikliği</li>
+        </ul>
+
+        <div class="info-box danger">
+          <div class="info-icon">⚠️</div>
+          <div>
+            <h5>Hatalı / Geç Veri Girişinin Sonuçları</h5>
+            <p>Kişisel hak kayıpları · Kurum zararı · Yanlış istatistik · Teftiş yapılamaması · Hukuki sorumluluk</p>
+          </div>
+        </div>
+
+        <!-- ŞİFRE -->
+        <h3 id="sifre">1.3.1 Gerekli Şifreleri Oluşturma ve Kullanma</h3>
+        <p>UYAP uygulamalarını aktif kullanabilmek için dört farklı parola türü bulunmaktadır:</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Parola Türü</th><th>Nasıl Alınır?</th><th>Değiştirme</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="badge blue">1</span></td>
+                <td><strong>Portal Parolası</strong></td>
+                <td>Parola Talep Formu → Faks → Bilgi İşlem Daire Başkanlığı</td>
+                <td>UYAP Portal → Şifre İşlemleri</td>
+              </tr>
+              <tr>
+                <td><span class="badge green">2</span></td>
+                <td><strong>E-Posta Parolası</strong></td>
+                <td>Portal girişi → Şifre İşlemleri sekmesi</td>
+                <td>Şifre İşlemleri sekmesi</td>
+              </tr>
+              <tr>
+                <td><span class="badge gold">3</span></td>
+                <td><strong>Domain Parolası</strong></td>
+                <td>sifredegistirme.uyap.gov.tr → E-posta onay kodu</td>
+                <td>CTRL+ALT+DELETE → Parola Değiştir</td>
+              </tr>
+              <tr>
+                <td><span class="badge red">4</span></td>
+                <td><strong>E-İmza Parolası</strong></td>
+                <td>kamusm.gov.tr → Bireysel İşlemler → SMS onay</td>
+                <td>KamuSM sistemi</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 id="portal">Portal Parolası Alma Adımları</h4>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content"><h5>Form Doldur</h5><p>UYAP Portal ana sayfası → Parola Talep İşlemleri → Adalet Bakanlığı Parola Talep Formu</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content"><h5>İmzala ve Faksla</h5><p>Ekran çıktısı al → Personel ve kurum amiri imzalar → Formda yazılı numaraya faks çek</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content"><h5>Parolayı Al</h5><p>Bilgi İşlem Daire Başkanlığı parolayı oluşturur ve telefonla bildirir</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content"><h5>Değiştir</h5><p>Portal giriş → Şifre İşlemleri → Parolayı kişiselleştir</p></div>
+          </div>
+        </div>
+
+        <h4 id="eposta">E-Posta Parolası (1.3.3)</h4>
+        <p>Portal parolası ile UYAP'a giriş yapıldıktan sonra <strong>Şifre İşlemleri → E-Posta, Serbest Kürsü ve Haberci Parolası Değiştirme</strong> bölümünden oluşturulur.</p>
+
+        <h4 id="domain">Domain (Bilgisayar Açma) Parolası (1.3.4)</h4>
+        <div class="info-box warning">
+          <div class="info-icon">💻</div>
+          <div>
+            <h5>Ön Koşullar</h5>
+            <p>E-posta hesabının aktif olması · E-posta şifresine sahip olunması · Bilgisayarın Adalet Bakanlığı etki alanında (domain) bulunması</p>
+          </div>
+        </div>
+        <div class="flow-box">
+<span class="comment"># Domain Parolası Alma Akışı</span>
+<span class="arrow">→</span> sifredegistirme.uyap.gov.tr
+<span class="arrow">→</span> Devam → Koşulları kabul et
+<span class="arrow">→</span> Sicil + Güvenlik sayısı gir → İLERİ
+<span class="arrow">→</span> Sisteme kayıtlı e-postaya onay kodu gönderilir
+<span class="arrow">→</span> Kodu kopyala → Onay Kodu kutucuğuna yapıştır
+<span class="arrow">→</span> Yeni şifreyi iki kutucuğa yaz
+<span class="arrow">→</span> ŞİFREMİ DEĞİŞTİR ✓
+        </div>
+
+        <h4 id="eimza">E-İmza Parolası (1.3.5)</h4>
+        <p>TÜBİTAK Kamu Sertifikasyon Merkezi (KamuSM) tarafından üretilir. E-imza ilgili personele ulaştırıldıktan sonra sahip tarafından parola oluşturulur.</p>
+        <div class="flow-box">
+<span class="comment"># E-İmza Parola Oluşturma</span>
+<span class="arrow">→</span> kamusm.gov.tr → Bireysel İşlemler
+<span class="arrow">→</span> Şifreli Giriş
+<span class="arrow">→</span> TC Kimlik No + Güvenlik Sözcüğü gir
+<span class="arrow">→</span> Kayıtlı telefon numarası doğrula → ONAY
+<span class="arrow">→</span> SMS onay kodu gel → Kodu gir → GÖNDER
+<span class="arrow">→</span> Bireysel Nitelikli Elektronik Sertifika sistemi açılır ✓
+        </div>
+
+        <div class="info-box info">
+          <div class="info-icon">ℹ️</div>
+          <div>
+            <h5>Güvenlik Sözcüğünü Unuttum?</h5>
+            <p>"Güvenlik Sözcüğünü Unuttum" butonuna tıklayarak ekrandaki yönergeleri takip edin.</p>
+          </div>
+        </div>
+
+      </div><!-- /body -->
+    </div><!-- /modul1 -->
+
+    <!-- ==================== MODÜL 2 ==================== -->
+    <div class="module-section" id="modul2">
+      <div class="module-section-header">
+        <div class="module-section-icon">📝</div>
+        <div>
+          <h2>2. UYAP Doküman Editörü</h2>
+          <p>Kurulum · Kaydetme · İmzalama · Yazdırma · Kişisel Menü</p>
+        </div>
+      </div>
+      <div class="module-section-body">
+
+        <h3 id="kurulum">2.1 Kurulum</h3>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content"><h5>Java Kurulumu</h5><p>java.com/tr → Java İndir (32 bit) → Bilgisayara kur</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content"><h5>E-İmza Sürücüleri</h5><p>Sertifika hizmet sağlayıcısından alınan kart okuyucu sürücüleri yüklenir</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content"><h5>Doküman Editörü</h5><p>uyap.gov.tr → UYAP Kelime İşlemci → ZIP indir → Klasöre çıkart → Kur → İleri → Tamamla ✓</p></div>
+          </div>
+        </div>
+
+        <h3 id="kaydet">2.2 Belge Kaydetme</h3>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Format</th><th>Açıklama</th><th>Durum</th></tr></thead>
+            <tbody>
+              <tr><td><strong>.udf</strong></td><td>Varsayılan UYAP formatı</td><td><span class="badge green">Varsayılan ⭐</span></td></tr>
+              <tr><td>.usf</td><td>UYAP imzalı format</td><td><span class="badge blue">UYAP</span></td></tr>
+              <tr><td>.doc</td><td>MS Word uyumlu</td><td><span class="badge gold">Alternatif</span></td></tr>
+              <tr><td>.pdf</td><td>Yazdırma / paylaşım</td><td><span class="badge gold">Alternatif</span></td></tr>
+              <tr><td>.odt</td><td>Açık ofis formatı</td><td><span class="badge gold">Alternatif</span></td></tr>
+              <tr><td>.rtf</td><td>Zengin metin formatı</td><td><span class="badge gold">Alternatif</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flow-box">
+<span class="comment"># İlk Kez Kaydetme</span>
+Dosya → Farklı Kaydet → Konum Seç → Kaydet
+
+<span class="comment"># Çalışırken Kaydetme</span>
+Dosya → Kaydet
+VEYA Hızlı Erişim Çubuğu → Kaydet simgesi
+        </div>
+
+        <h3 id="imzala">2.3 Doküman İmzalama</h3>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content"><h5>E-İmzayı Tak</h5><p>Elektronik imzayı bilgisayara tak; kart üretici firma sürücülerini yükle</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content"><h5>Kütüphane Seç</h5><p>Araçlar Menüsü → İmza Kütüphanesi → Firmadan alınan kart kütüphanesini seç</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content"><h5>İmzala</h5><p>İmzala simgesine tıkla → E-imza şifresini gir → Tamam</p></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content"><h5>Doğrulama</h5><p>Sağ üst köşede kurdele simgesi görünür → İmza geçerli ✓</p></div>
+          </div>
+        </div>
+
+        <div class="info-box danger">
+          <div class="info-icon">🚨</div>
+          <div>
+            <h5>Kritik Uyarı!</h5>
+            <p>İmzalı evrakta değişiklik yapılırsa <strong>imza bilgileri silinir</strong>. Değişiklik sonrası evrak <strong>yeniden e-imza ile imzalanmalıdır</strong>.</p>
+          </div>
+        </div>
+
+        <h3 id="yazdir">2.5 Belge Yazdırma</h3>
+        <div class="flow-box">
+<span class="comment"># Yazdırma Adımları</span>
+Dosya → Yazdır
+<span class="arrow">→</span> Kopya sayısını belirle
+<span class="arrow">→</span> Doğru yazıcının seçili olduğunu kontrol et
+<span class="arrow">→</span> Sayfa düzenini ayarla
+<span class="arrow">→</span> Yazdır ✓
+
+<span class="comment"># Web ID İpucu</span>
+Evrakta Web ID varsa "Metni Sayfaya Sığdır" aktif gelir.
+Web ID'siz yazdırmak için bu seçeneği pasife al.
+        </div>
+
+        <h3 id="menu">2.6–2.9 Görev Çubuğu ve Kişisel Menü</h3>
+        <p>Editörün 3.5.2 versiyonuyla gelen ribbon arayüzü ile menüler ve araç çubukları sekmeler hâlinde sunulmaktadır.</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>İşlem</th><th>Yol</th></tr></thead>
+            <tbody>
+              <tr><td>Araç çubuğuna ikon ekle</td><td>İkona sağ tık → Araç Çubuğuna Ekle</td></tr>
+              <tr><td>Kişisel menüye ekle</td><td>İkona sağ tık → Kişisel Menüye Ekle</td></tr>
+              <tr><td>İkonu kaldır</td><td>Çubuk/menüdeki ikona sağ tık → Kaldır</td></tr>
+              <tr><td>Menüyü gizle/göster</td><td>Ctrl+F1 veya menüye çift tıkla</td></tr>
+              <tr><td>Menülere hızlı erişim</td><td>Alt veya F10 tuşu</td></tr>
+              <tr><td>Görev çubuğunu gizle</td><td>Görünüm → Görev Çubuğu Görünsün</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div><!-- /modul2 -->
+
+    <!-- ==================== MODÜL 3 ==================== -->
+    <div class="module-section" id="modul3">
+      <div class="module-section-header">
+        <div class="module-section-icon">👤</div>
+        <div>
+          <h2>3. Personel Uygulamaları (Ortak İşlemler)</h2>
+          <p>Özlük · İzin · NAS · Belge Düzenleme · Mal Bildirimi</p>
+        </div>
+      </div>
+      <div class="module-section-body">
+
+        <div class="info-box info">
+          <div class="info-icon">🔑</div>
+          <div>
+            <h5>Sisteme Erişim Yolu</h5>
+            <p>UYAP Portal → Personel Uygulamaları Rolü → Aktif Görevlendirmeler → Ortak İşlemler</p>
+          </div>
+        </div>
+
+        <h3 id="ozluk">3.1 Özlük İşlemleri</h3>
+        <h4>Aile Fert Bilgileri Güncelleme</h4>
+        <div class="flow-box">
+Personel İşlemleri → Özlük Bilgisi
+<span class="arrow">→</span> Personel Bilgileri → Aile Fert Bilgileri
+
+<span class="comment"># Yeni Kayıt</span>
+<span class="step">[Ekle]</span> butonu → Bilgileri gir → Kaydet ✓
+
+<span class="comment"># Güncelleme</span>
+Aile bireyi seç → <span class="step">[Güncelle]</span> → Kaydet ✓
+        </div>
+
+        <div class="info-box warning">
+          <div class="info-icon">⚠️</div>
+          <div>
+            <h5>NAS İçin Önemli</h5>
+            <p>NAS'ta Eş Durumu tayin gerekçesi seçilecekse eşin <strong>çalışma ve görev yeri bilgileri</strong> Aile Fert Bilgileri ekranından mutlaka güncel tutulmalıdır.</p>
+          </div>
+        </div>
+
+        <h3 id="izin">3.2 İzin Talep İşlemleri</h3>
+        <div class="flow-box">
+<span class="comment"># İzin Talep Akışı</span>
+Personel İşlemleri → Personel İzin Talep Formu
+<span class="arrow">→</span> Yeni Talep
+<span class="arrow">→</span> İzin Türü Seç
+<span class="arrow">→</span> Ayrılış + Bitiş tarihi gir  ← Süre otomatik hesaplanır
+<span class="arrow">→</span> İzin Adres Bilgisi (İl / İlçe)
+<span class="arrow">→</span> Evrak Ekle (varsa)
+<span class="arrow">→</span> Giden Evrak: Konu + Açıklama (örn: 2024/3)
+<span class="arrow">→</span> Sıralı Amirler Seç → Kapat
+<span class="arrow">→</span> [Kaydet] → Evrak Göster + İmzala aktif
+<span class="arrow">→</span> [İmzala/Onayla] → E-imza şifresi → Tamam ✓
+        </div>
+
+        <h4>İzin Takibi</h4>
+        <div class="flow-box">
+İzin Talep Formu → [Talep Sorgula]
+<span class="arrow">→</span> Admin Evrak Takip → "Evrak Durumu" satırı
+<span class="arrow">→</span> İmza aşamaları takip edilir ✓
+        </div>
+
+        <h3 id="nas">3.3 Personel Atanma Talep Formu (NAS)</h3>
+        <div class="flow-box">
+Ortak İşlemler → Personel İşlemleri
+<span class="arrow">→</span> Personel Atama Talep Ekranı
+<span class="arrow">→</span> Atama Talep Kabul
+<span class="arrow">→</span> "Zorunlu atamaya tabi mi?" → HAYIR
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Alan</th><th>Seçim</th></tr></thead>
+            <tbody>
+              <tr><td>Talep Türü</td><td>GENEL</td></tr>
+              <tr><td>Talep Nedeni</td><td>DEĞİŞİKLİK TALEBİ</td></tr>
+              <tr><td>Tayin Gerekçesi</td><td>Talep</td></tr>
+              <tr><td>Maksimum Tercih</td><td>5 kurum</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-box success">
+          <div class="info-icon">✅</div>
+          <div>
+            <h5>Tercih İpuçları</h5>
+            <p>Yukarı/Aşağı butonu ile tercih sıralaması değiştirilebilir · Mazeret belgesi varsa [Evrak Ekle] ile yükle · Telefon ve e-posta eksiksiz doldurulmalı</p>
+          </div>
+        </div>
+
+        <h3 id="belge">3.4 Belge Düzenleme</h3>
+        <div class="flow-box">
+Ortak İşlemler → Personel İşlemleri
+<span class="arrow">→</span> Özlük Bilgisi → [Belge Düzenle]
+<span class="arrow">→</span> Evrak Ekle (tarayıcı veya diskteki belge)
+<span class="arrow">→</span> Konu + Açıklama gir
+<span class="arrow">→</span> Gönderileceği kurum seç → Dağıtım listesi onayı
+<span class="arrow">→</span> Evrak Düzenleme Ekranında düzenle
+<span class="arrow">→</span> Sisteme Kaydet veya E-imzayla imzala → Kaydet
+<span class="arrow">→</span> [Gönder] → Kurumun UYAP Gelen Evrak Rolüne düşer ✓
+        </div>
+
+        <h3 id="mal">3.5 Emlak ve Servet Bilgileri (Mal Bildirimi)</h3>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Bildirim Türü</th><th>Ne Zaman?</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Genel Beyan</strong></td><td>Göreve ilk girişte + Sonu 0 ve 5 ile biten yıllarda</td></tr>
+              <tr><td><strong>Ek Beyan</strong></td><td>Mal varlığında kanun kapsamında değişiklik olduğunda — 30 iş günü içinde</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-box danger">
+          <div class="info-icon">⚖️</div>
+          <div>
+            <h5>Yasal Yaptırım — 657 sayılı DMK Md. 125</h5>
+            <p>Zamanında mal bildirimi vermeyen memura <strong>kademe ilerlemesinin durdurulması</strong> cezası uygulanır.</p>
+          </div>
+        </div>
+
+        <h4>Önemli Kurallar</h4>
+        <ul class="styled-list">
+          <li>Memur; kendisi, eşi ve velayetindeki çocuklar için bildirim yapar</li>
+          <li>Aynı mal grubunda aynı isim kullanılamaz → Otomobil 1, Otomobil 2</li>
+          <li class="arrow">E-imza varsa: İmzala/Onayla butonu ile dijital imza</li>
+          <li class="arrow">E-imza yoksa: Önlü arkalı yazdır → Islak imzala → Kapalı zarf → İlgili birime teslim</li>
+        </ul>
+
+      </div>
+    </div><!-- /modul3 -->
+
+    <!-- ==================== MODÜL 4 ==================== -->
+    <div class="module-section" id="modul4">
+      <div class="module-section-header">
+        <div class="module-section-icon">📜</div>
+        <div>
+          <h2>4. UYAP Mevzuat Programı</h2>
+          <p>İndirme · Kurulum · Mevzuat ve İçtihat Arama</p>
+        </div>
+      </div>
+      <div class="module-section-body">
+
+        <h3>4.1 Programın İndirilmesi ve Kurulması</h3>
+        <div class="flow-box">
+mevzuat.adalet.gov.tr
+<span class="arrow">→</span> "Mevzuat programını indirmek için tıklayınız"
+<span class="arrow">→</span> Güvenlik kodu gir → İndir
+<span class="arrow">→</span> Kurulum paketini çalıştır
+<span class="arrow">→</span> (Yönetici izni gerekmez — her kullanıcı kurabilir)
+<span class="arrow">→</span> Program her açılışta otomatik güncellenir ✓
+        </div>
+
+        <h3>4.2 Mevzuat Programı ile Yapılabilecekler</h3>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Kategori</th><th>Kapsam</th></tr></thead>
+            <tbody>
+              <tr><td>Mevzuat</td><td>Günlük güncellenen tüm mevzuat</td></tr>
+              <tr><td>Yüksek Yargı İçtihadı</td><td><strong>38.000+</strong> karar</td></tr>
+              <tr><td>Anayasa Mahkemesi</td><td>Tüm kararlar</td></tr>
+              <tr><td>AİHM</td><td>Türkiye ile ilgili kararlar</td></tr>
+              <tr><td>Yargıtay / Danıştay</td><td>Emsal kararlar</td></tr>
+              <tr><td>Uyuşmazlık Mahkemesi</td><td>Tüm kararlar</td></tr>
+              <tr><td>Adalet Dergisi</td><td>Yayımlanan makaleler</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Arama Kriterleri</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Mevzuat Arama</th><th>İçtihat Arama</th></tr></thead>
+            <tbody>
+              <tr><td>Mevzuat Türü</td><td>İçtihat Türü</td></tr>
+              <tr><td>Mevzuat Adı</td><td>Metin İçeriği</td></tr>
+              <tr><td>Mevzuat Numarası</td><td>Daire/Kurul Adı</td></tr>
+              <tr><td>Mevzuat İçeriği</td><td>Esas Numarası</td></tr>
+              <tr><td>Resmî Gazete Tarihi</td><td>Karar Numarası</td></tr>
+              <tr><td>Resmî Gazete Sayısı</td><td>Aranacak Kavram</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div><!-- /modul4 -->
+
+    <!-- ==================== GENELGE ==================== -->
+    <div class="module-section" id="genelge">
+      <div class="module-section-header">
+        <div class="module-section-icon">📋</div>
+        <div>
+          <h2>53/1 Sayılı Genelge (Özet)</h2>
+          <p>Adalet Bakanlığı · Ceza ve Tevkifevleri Genel Müdürlüğü · 30/03/2007</p>
+        </div>
+      </div>
+      <div class="module-section-body">
+        <div class="genelge">
+          <div class="genelge-header">
+            <h3>T.C. ADALET BAKANLIĞI<br>Ceza ve Tevkifevleri Genel Müdürlüğü</h3>
+            <p>Sayı: B.03.0.CTE.0.00.07.00/010.06.02/9 · 30/03/2007 · Genelge No: 53/1</p>
+          </div>
+          <p><span class="madde">Madde (7):</span> Ulusal Yargı Ağına girilmiş veri veya bilgi, Bakanlığımıza gönderilmiş <strong>resmî yazı hükmündedir.</strong> Bu nedenle girilen veri ve bilgilerin doğru olup olmadığından kaydı giren ve bunları denetlemekle yükümlü olan personel sorumludur.</p>
+          <p><span class="madde">Madde (8):</span> UYAP ekranlarına o ekrana bilgi girişi yapmakla yükümlü olan, kendisine görev, yetki, şifre ve imkân verilen personel giriş yapacaktır. Bilgilerin eksik veya yanlış olmasından ya da işlem yapılmamasından <strong>yetkili kişi ile amir birlikte sorumlu tutulacak</strong> ve haklarında gerekli işlem yapılacaktır.</p>
+          <p><span class="madde">Madde (9):</span> UYAP ekranlarını kullanacak personel mümkün olduğu kadar uzun süreyle <strong>(en az 6 ay)</strong> aynı görevde tutulacaktır.</p>
+          <p><span class="madde">Madde (5):</span> UYAP'ın yaygınlaştırılmasında üstün başarı gösteren personel <strong>ödüllendirilecek</strong>; aksi davrananlar, ihmal veya kasıt altında UYAP'ı kullanmayanlar hakkında <strong>adlî ve/veya idarî soruşturma</strong> açılacaktır.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /layout -->
+
+<a href="#" class="scroll-top" title="Yukarı çık">↑</a>
+
+<script>
+  // Reading progress
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('readingProgress');
+    const total = document.body.scrollHeight - window.innerHeight;
+    el.style.width = (window.scrollY / total * 100) + '%';
+  });
+
+  // Active sidebar link
+  const sections = document.querySelectorAll('[id]');
+  const sideLinks = document.querySelectorAll('.sidebar a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) cur = s.id; });
+    sideLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + cur) a.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
