@@ -1,0 +1,178 @@
+{
+  "meta": {
+    "title": "Temel UYAP Bilgisi",
+    "subtitle": "İnfaz ve Koruma Memurları Değerlendirme Testi",
+    "version": "2.0",
+    "totalQuestions": 10,
+    "totalPoints": 100,
+    "passingScore": 70,
+    "timeLimit": 600,
+    "source": "CTEGM Bölüm 9 — Resmi Müfredat",
+    "lastUpdated": "2024"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "text": "UYAP'ın temel amacı aşağıdakilerden hangisidir?",
+      "options": [
+        "Adalet hizmetlerini hızlı, güvenilir ve etkin yürütmek",
+        "Mahkemelerde dosya sayısını azaltmak",
+        "İnternet hizmetlerini yaygınlaştırmak",
+        "Sadece vatandaşların dosya sorgulamasını sağlamak",
+        "Evrak taramasını zorunlu hale getirmek"
+      ],
+      "correct": 0,
+      "explanation": "UYAP; adalet hizmetlerinin en kısa zamanda, en az maliyetle, şeffaf, etkili, verimli, hızlı, güvenilir, tarafsız ve denetlenebilir şekilde yerine getirilmesini temin etmek üzere geliştirilmiş elektronik adalet sistemidir.",
+      "topic": "UYAP Tanımı ve Amaçları",
+      "difficulty": "kolay"
+    },
+    {
+      "id": 2,
+      "text": "UYAP'ta veri girişinin doğru, eksiksiz ve zamanında yapılmamasının sonucu aşağıdakilerden hangisidir?",
+      "options": [
+        "İnternet kesintilerinin artması",
+        "Adli istatistiklerin doğru üretilememesi",
+        "Evrakların otomatik imzalanması",
+        "Personelin izinlerinin iptal edilmesi",
+        "Yeni mevzuatın yayımlanamaması"
+      ],
+      "correct": 1,
+      "explanation": "UYAP'a verilerin yanlış ve geç girilmesi durumunda doğru adli istatistiki bilgiler üretilemeyecek ve adalet politikaları uygulanamayacaktır. Ayrıca kişilerin hak kayıplarına ve mağduriyetlerine yol açabilir.",
+      "topic": "Veri Girişinin Önemi",
+      "difficulty": "orta"
+    },
+    {
+      "id": 3,
+      "text": "E-imza parolası hangi kurum tarafından üretilir?",
+      "options": [
+        "Adalet Bakanlığı",
+        "UYAP Teknik Ofis Yetkilisi",
+        "TÜBİTAK Kamu Sertifikasyon Merkezi",
+        "Yargıtay Bilgi İşlem",
+        "Maliye Bakanlığı"
+      ],
+      "correct": 2,
+      "explanation": "UYAP uygulamalarında kullanılmak üzere ilgili kurumun talebi ve Adalet Bakanlığının bilgisi üzerine TÜBİTAK Kamu Sertifikasyon Merkezi tarafından elektronik imza üretilerek ilgili personele gönderilmektedir.",
+      "topic": "E-İmza Parolası",
+      "difficulty": "orta"
+    },
+    {
+      "id": 4,
+      "text": "UYAP Doküman Editörü'nün belgeyi varsayılan olarak kaydettiği dosya uzantısı nedir?",
+      "options": [
+        ".doc",
+        ".udf",
+        ".pdf",
+        ".rtf",
+        ".odt"
+      ],
+      "correct": 1,
+      "explanation": "Editör otomatik olarak dosyaları .udf (UYAP Doküman Formatı) biçiminde kaydeder. Farklı formatlarda kaydetmek için doküman tipi listesinden seçim yapılabilir.",
+      "topic": "UYAP Doküman Editörü",
+      "difficulty": "kolay"
+    },
+    {
+      "id": 5,
+      "text": "Aşağıdakilerden hangisi UYAP'ın sağladığı faydalardan biri DEĞİLDİR?",
+      "options": [
+        "Yargı birimleri arasında hızlı elektronik yazışma",
+        "Veri bütünlüğünün sağlanması",
+        "Temyiz dosyalarının elektronik gönderilmesi",
+        "Mahkeme kararlarının otomatik hazırlanması",
+        "Online talimat işlemlerinin yapılması"
+      ],
+      "correct": 3,
+      "explanation": "UYAP, mahkeme kararlarını otomatik olarak hazırlamaz. Hâkimler kararları sistemde hazırlanan standart şablonlara bilgi girerek hazırlar; ancak bu otomatik değil, kullanıcı tarafından yapılan bir işlemdir.",
+      "topic": "UYAP'ın Faydaları",
+      "difficulty": "zor"
+    },
+    {
+      "id": 6,
+      "text": "Doküman Editöründe imzalı evrakta değişiklik yapılırsa ne olur?",
+      "options": [
+        "Sistem değişikliği kabul etmez.",
+        "Eski imza geçerli kalır.",
+        "Değişiklik sonrası evrakın tekrar imzalanması gerekir.",
+        "Evrak kendiliğinden iptal olur.",
+        "Evrak otomatik PDF'e dönüşür."
+      ],
+      "correct": 2,
+      "explanation": "İmzalı bir evrakta değişiklik yapılması imza bilgilerinin kaybolmasına neden olur. Bu nedenle değişiklik sonrası evrakın tekrar e-imza ile imzalanması gerekmektedir.",
+      "topic": "Doküman İmzalama",
+      "difficulty": "orta"
+    },
+    {
+      "id": 7,
+      "text": "UYAP Personel Uygulamaları menüsünden yapılabilecek işlemlerden biri aşağıdakilerden hangisidir?",
+      "options": [
+        "Mahkeme tensip tutanağı hazırlamak",
+        "TAKBİS kayıtlarını düzenlemek",
+        "Disiplin cezası vermek",
+        "Elektronik imza sertifikası üretmek",
+        "Aile fert bilgilerini güncellemek"
+      ],
+      "correct": 4,
+      "explanation": "Personel Uygulamaları modülü içerisinde Ortak İşlemler rolü üzerinden Özlük Bilgileri kapsamında Aile Fert Bilgileri güncellenebilmektedir. Diğer seçenekler bu modülde yapılamaz.",
+      "topic": "Personel Uygulamaları",
+      "difficulty": "orta"
+    },
+    {
+      "id": 8,
+      "text": "İzin Talep Formunda izin süresi nasıl hesaplanır?",
+      "options": [
+        "Kullanıcı manuel hesaplar.",
+        "Sadece izin amiri onaylayınca hesaplanır.",
+        "Sistem ayrılış ve dönüş tarihine göre otomatik hesaplar.",
+        "MEB izin çizelgesine göre hesaplanır.",
+        "Personel Dairesi hesaplar."
+      ],
+      "correct": 2,
+      "explanation": "İzne Ayrılış Tarihi ve İzin Bitiş Tarihi girildiğinde İzin Süresi (Gün) otomatik olarak sistem tarafından hesaplanmaktadır.",
+      "topic": "İzin Bilgileri",
+      "difficulty": "kolay"
+    },
+    {
+      "id": 9,
+      "text": "UYAP Mevzuat Programı aşağıdakilerden hangisini sağlar?",
+      "options": [
+        "Tutuklu bilgilerinin kaydını sağlar.",
+        "Günlük güncellenen mevzuata erişimi sağlar.",
+        "Personel izin sürelerinin hesabını yapar.",
+        "Elektronik imza doğrulamasını yapar.",
+        "Cezaevi yemek listelerini düzenler."
+      ],
+      "correct": 1,
+      "explanation": "UYAP Mevzuat Programı; her gün yapılan güncelleme ile en güncel mevzuata, 38.000'i aşan yüksek yargı içtihadına ve çeşitli mahkeme kararlarına erişimi sağlar. Program her açıldığında kendini otomatik günceller.",
+      "topic": "UYAP Mevzuat Programı",
+      "difficulty": "kolay"
+    },
+    {
+      "id": 10,
+      "text": "UYAP'a girilen veri hangi hukuki niteliğe sahiptir?",
+      "options": [
+        "Tavsiye niteliği taşır.",
+        "Tutanak niteliğindedir.",
+        "Belge değeri yoktur.",
+        "Bilgi formu yerine geçer.",
+        "Resmî yazı hükmündedir."
+      ],
+      "correct": 4,
+      "explanation": "53/1 Sayılı Genelge'ye göre: 'Ulusal Yargı Ağına girilmiş veri veya bilgi, Bakanlığımıza gönderilmiş resmî yazı hükmündedir.' Bu nedenle girilen bilgilerin doğruluğundan kaydı giren personel ve denetleme yükümlüsü amir sorumludur.",
+      "topic": "Yasal Sorumluluk",
+      "difficulty": "orta"
+    }
+  ],
+  "topics": [
+    "UYAP Tanımı ve Amaçları",
+    "UYAP'ın Faydaları",
+    "Veri Girişinin Önemi",
+    "Portal Parolası",
+    "E-İmza Parolası",
+    "UYAP Doküman Editörü",
+    "Doküman İmzalama",
+    "Personel Uygulamaları",
+    "İzin Bilgileri",
+    "UYAP Mevzuat Programı",
+    "Yasal Sorumluluk"
+  ]
+}
