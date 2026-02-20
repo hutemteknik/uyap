@@ -1,0 +1,327 @@
+/* UYAP Eğitim — Medya Sistemi v3 */
+
+/* === WRAPPER === */
+.media-box {
+  margin: 28px auto;
+  max-width: 820px;
+}
+
+/* === TARAYICI ÇERÇEVE === */
+.browser {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.13);
+  border: 1px solid #d8e2ec;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.browser:hover {
+  box-shadow: 0 14px 42px rgba(0,0,0,0.18);
+  transform: translateY(-2px);
+}
+
+.browser-bar {
+  height: 36px;
+  background: linear-gradient(to bottom, #eaecef, #dde1e5);
+  border-bottom: 1px solid #c5cdd5;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.browser-dots { display: flex; gap: 5px; }
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.dot-r { background: #ff5f57; }
+.dot-y { background: #febc2e; }
+.dot-g { background: #28c840; }
+
+.browser-url {
+  flex: 1;
+  background: white;
+  border: 1px solid #c5cdd5;
+  border-radius: 5px;
+  height: 22px;
+  padding: 0 8px;
+  font-size: 0.72rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* === EKRAN GÖRÜNTÜSܠALANI === */
+.screen-area {
+  position: relative;
+  background: #f0f4f8;
+  overflow: hidden;
+}
+
+.screen-area img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fig-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(26,58,92,0.85);
+  color: white;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  z-index: 4;
+}
+
+.zoom-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.90);
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  transition: transform 0.15s;
+}
+
+.zoom-btn:hover { transform: scale(1.12); }
+
+/* === GIF ALANI === */
+.gif-area {
+  position: relative;
+  background: #111;
+  overflow: hidden;
+  cursor: pointer;
+  /* min-height: GIF yüklenene kadar alan korunsun */
+  min-height: 80px;
+}
+
+.gif-area img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* === GIF KAPAK ===
+   display yerine visibility + opacity kullanıyoruz
+   Bu sayede JS geçişi daha güvenilir çalışır
+*/
+.gif-cover {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.40);
+  display: flex;               /* her zaman flex kalır */
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  /* Başlangıç: görünür */
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.2s, visibility 0.2s;
+  cursor: pointer;
+}
+
+.gif-cover:hover {
+  background: rgba(0,0,0,0.22);
+}
+
+/* JS tarafından gizlenince */
+.gif-cover.hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.play-circle {
+  width: 66px;
+  height: 66px;
+  background: rgba(255,255,255,0.94);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  padding-left: 5px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  user-select: none;
+  pointer-events: none;
+}
+
+.gif-cover:hover .play-circle {
+  transform: scale(1.10);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.45);
+}
+
+/* === GIF ROZETİ === */
+.gif-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(231,76,60,0.88);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  z-index: 4;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.gif-tag:hover       { background: rgba(192,57,43,0.95); }
+.gif-tag.playing     { background: rgba(39,174,96,0.88); }
+.gif-tag.playing:hover { background: rgba(30,132,73,0.95); }
+
+/* === ALTYAZI === */
+.media-caption {
+  background: rgba(26,58,92,0.91);
+  color: white;
+  padding: 10px 15px;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+
+.caption-icon {
+  font-size: 0.95rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.caption-body strong {
+  display: block;
+  color: #f39c12;
+  font-size: 0.76rem;
+  margin-bottom: 2px;
+}
+
+.caption-body p {
+  margin: 0;
+  opacity: 0.88;
+  font-size: 0.81rem;
+}
+
+/* === YER TUTUCU === */
+.placeholder {
+  border: 2px dashed #aac0d4;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f2f7fb, #e8edf3);
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  gap: 6px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.placeholder:hover {
+  border-color: #2980b9;
+  background: linear-gradient(135deg, #e6f2fb, #d4e8f5);
+}
+
+.ph-icon  { font-size: 2.6rem; opacity: 0.5; }
+.ph-title { font-size: 0.9rem; font-weight: 700; color: #2c3e50; }
+.ph-sub   { font-size: 0.78rem; color: #888; }
+
+.ph-file {
+  margin-top: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  color: #555;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid #c8d5e0;
+  padding: 3px 12px;
+  border-radius: 14px;
+}
+
+/* === ADIM KARTLARI === */
+.ss-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  margin: 24px 0;
+}
+
+.ss-step-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border: 1px solid #e0e8f0;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.ss-step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+
+.ss-step-card-header {
+  background: linear-gradient(135deg, #1a3a5c, #2c5f8a);
+  color: white;
+  padding: 11px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ss-step-num {
+  width: 28px;
+  height: 28px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ss-step-title { font-size: 0.88rem; font-weight: 600; }
+
+.ss-step-foot {
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: #666;
+  background: #f8f9fa;
+  border-top: 1px solid #e8ecf0;
+  line-height: 1.5;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 700px) {
+  .media-box    { margin: 18px 0; }
+  .play-circle  { width: 52px; height: 52px; font-size: 1.3rem; }
+  .browser-url  { display: none; }
+  .ss-steps-grid { grid-template-columns: 1fr; }
+}

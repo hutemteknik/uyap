@@ -308,7 +308,8 @@
   }
 </style>
 <!-- materyal.html <head> bölümüne ekleyin -->
-<link rel="stylesheet" href="css/screenshots.css">
+<link rel="stylesheet" href="css/media.css">
+
 
 </head>
 <body>
@@ -421,235 +422,26 @@
         <h3 id="veri">1.3 UYAP'a Veri Girişinde Dikkat Edilecek Hususlar</h3>
 
         <p>Mevzuat hükümlerine göre UYAP'ın kullanılması <strong>zorunlu</strong> olup görevli personel verileri <strong>doğru, eksiksiz ve zamanında</strong> girmekle yükümlüdür.</p>
-       <!-- Veri Girişi Sorunları -->
-
-       <!-- ════════════════════════════════════════
-     A) HENÜZ GÖRSEL YOK → PLACEHOLDER
-     ════════════════════════════════════════ -->
-
-<!-- Basit placeholder -->
-<div class="ss-wrapper large center">
-  <div class="ss-placeholder blue" style="min-height:220px;">
-    <div class="ss-ph-icon">📷</div>
-    <div class="ss-ph-title dark">Portal Giriş Ekranı</div>
-    <div class="ss-ph-sub">Ekran görüntüsü eklenecek</div>
-    <div class="ss-ph-filename">img/screenshots/portal-giris.png</div>
+        <!-- SEÇENEK A: Önizleme PNG + GIF ayrı -->
+<div class="gif-area"
+     data-gif="img/gifs/portal-parola.gif"
+     data-static="img/gifs/portal-parola-on.png">
+  <img src="img/gifs/portal-parola-on.png" alt="Portal parola" />
+  <div class="gif-cover">
+    <div class="play-circle">▶</div>
   </div>
+  <div class="gif-tag">GIF</div>
 </div>
 
-<!-- GIF placeholder -->
-<div class="ss-wrapper large center">
-  <div class="ss-placeholder orange" style="min-height:220px;">
-    <div class="ss-ph-icon">🎬</div>
-    <div class="ss-ph-title dark">Parola Talep Süreci</div>
-    <div class="ss-ph-sub">Animasyon eklenecek — GIF</div>
-    <div class="ss-ph-filename">img/gifs/portal-parola.gif</div>
+<!-- SEÇENEK B: Sadece GIF var, önizleme yok — direkt oynar -->
+<div class="gif-area"
+     data-gif="img/gifs/portal-parola.gif">
+  <img src="img/gifs/portal-parola.gif" alt="Portal parola" />
+  <div class="gif-cover">
+    <div class="play-circle">▶</div>
   </div>
+  <div class="gif-tag">GIF</div>
 </div>
-
-
-<!-- ════════════════════════════════════════
-     B) EKRAN GÖRÜNTÜSܠ(PNG/JPG)
-     ════════════════════════════════════════ -->
-
-<div class="ss-wrapper large center">
-  <div class="ss-frame">
-    <div class="ss-frame-bar">
-      <div class="ss-frame-dots">
-        <div class="ss-dot red"></div>
-        <div class="ss-dot yellow"></div>
-        <div class="ss-dot green"></div>
-      </div>
-      <div class="ss-frame-url">
-        <span class="lock-icon">🔒</span>
-        <span class="url-text">uyap.gov.tr/portal</span>
-      </div>
-    </div>
-    <div class="ss-image-area">
-      <div class="ss-step-badge gold">Şekil 1</div>
-      <img
-        src="img/screenshots/portal-giris.png"
-        alt="UYAP Portal Giriş Ekranı"
-        data-lightbox
-        data-caption="UYAP Portal ana sayfası — Parola Talep İşlemleri sekmesi"
-        loading="lazy"
-      />
-      <button class="ss-zoom-btn" title="Büyüt">🔍</button>
-    </div>
-    <div class="ss-caption">
-      <div class="ss-caption-icon">📌</div>
-      <div class="ss-caption-text">
-        <strong>Şekil 1</strong>
-        <p>UYAP Portal ana sayfasında Parola Talep İşlemleri sekmesine tıklanır.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════
-     C) GIF OYNATICI
-     ════════════════════════════════════════ -->
-
-<div class="ss-wrapper large center">
-  <div class="ss-frame">
-    <div class="ss-frame-bar">
-      <div class="ss-frame-dots">
-        <div class="ss-dot red"></div>
-        <div class="ss-dot yellow"></div>
-        <div class="ss-dot green"></div>
-      </div>
-      <div class="ss-frame-url">
-        <span class="lock-icon">🔒</span>
-        <span class="url-text">sifredegistirme.uyap.gov.tr</span>
-      </div>
-    </div>
-    <!-- GIF: data-static = önizleme, data-gif = asıl GIF -->
-    <div class="ss-gif-container">
-      <img
-        src="img/gifs/domain-parola-onizleme.png"
-        data-static="img/gifs/domain-parola-onizleme.png"
-        data-gif="img/gifs/domain-parola.gif"
-        alt="Domain parolası oluşturma"
-        loading="lazy"
-      />
-      <div class="ss-gif-overlay">
-        <button class="ss-gif-play-btn" aria-label="Oynat">▶</button>
-      </div>
-      <div class="ss-gif-badge">GIF</div>
-    </div>
-    <div class="ss-caption">
-      <div class="ss-caption-icon">🎬</div>
-      <div class="ss-caption-text">
-        <strong>Animasyon — Domain Parola Oluşturma</strong>
-        <p>Oynat butonuna basarak adım adım domain parolası oluşturma sürecini izleyin.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════
-     D) ADIM ADIM SERİSİ (Küçük kartlar)
-     ════════════════════════════════════════ -->
-
-<div class="ss-steps-grid">
-
-  <div class="ss-step-card">
-    <div class="ss-step-card-header">
-      <div class="ss-step-card-num">1</div>
-      <div class="ss-step-card-title">Parola Talep Formunu Aç</div>
-    </div>
-    <div class="ss-step-card-body">
-      <!-- Görsel varsa: -->
-      <img src="img/screenshots/adim1-form.png" alt="Adım 1"
-           style="width:100%;display:block;" loading="lazy"
-           data-lightbox data-caption="Adım 1: Parola Talep Formu">
-      <!-- Görsel yoksa: -->
-      <!--
-      <div class="ss-placeholder" style="min-height:160px;">
-        <div class="ss-ph-icon">📷</div>
-        <div class="ss-ph-title dark">Adım 1</div>
-        <div class="ss-ph-filename">img/screenshots/adim1-form.png</div>
-      </div>
-      -->
-    </div>
-    <div class="ss-step-card-caption">
-      UYAP Portal → Parola Talep İşlemleri → Adalet Bakanlığı Parola Yenileme
-    </div>
-  </div>
-
-  <div class="ss-step-card">
-    <div class="ss-step-card-header">
-      <div class="ss-step-card-num">2</div>
-      <div class="ss-step-card-title">Formu Doldur ve Faksla</div>
-    </div>
-    <div class="ss-step-card-body">
-      <div class="ss-placeholder" style="min-height:160px;">
-        <div class="ss-ph-icon">📷</div>
-        <div class="ss-ph-title dark">Adım 2</div>
-        <div class="ss-ph-filename">img/screenshots/adim2-faks.png</div>
-      </div>
-    </div>
-    <div class="ss-step-card-caption">
-      Formu doldur → İmzala → Faks çek
-    </div>
-  </div>
-
-  <div class="ss-step-card">
-    <div class="ss-step-card-header">
-      <div class="ss-step-card-num">3</div>
-      <div class="ss-step-card-title">Parolayı Değiştir</div>
-    </div>
-    <div class="ss-step-card-body">
-      <div class="ss-placeholder" style="min-height:160px;">
-        <div class="ss-ph-icon">🔑</div>
-        <div class="ss-ph-title dark">Adım 3</div>
-        <div class="ss-ph-filename">img/screenshots/adim3-degistir.png</div>
-      </div>
-    </div>
-    <div class="ss-step-card-caption">
-      Portal → Şifre İşlemleri → Yeni parolayı gir
-    </div>
-  </div>
-
-</div>
-
-<!--
-╔══════════════════════════════════════════════════════════════╗
-║           GIF / EKRAN GÖRÜNTÜSܠDOSYA LİSTESİ              ║
-╠══════════════════════════════════════════════════════════════╣
-║  MODÜL 1 — TEMEL UYAP BİLGİSİ                               ║
-╠══════════════════════════════════════════════════════════════╣
-║  img/screenshots/sekil1-portal-giris.png                     ║
-║  img/screenshots/sekil2-parola-talep.png                     ║
-║  img/screenshots/sekil3-sifre-islemleri.png                  ║
-║  img/screenshots/sekil4-domain-link.png                      ║
-║  img/screenshots/sekil5-domain-devam.png                     ║
-║  img/screenshots/sekil6-domain-onay-kodu.png                 ║
-║  img/screenshots/sekil7-domain-sifre-gir.png                 ║
-║  img/screenshots/sekil8-kamusm-giris.png                     ║
-║  img/screenshots/sekil9-kamusm-guvenlik.png                  ║
-║  img/screenshots/sekil10-kamusm-telefon.png                  ║
-║  img/screenshots/sekil11-kamusm-sms.png                      ║
-║  img/screenshots/sekil12-kamusm-tamamlandi.png               ║
-║                                                              ║
-║  img/gifs/sekil1-portal-parola.gif                          ║
-║  img/gifs/sekil4-domain-parola.gif                          ║
-║  img/gifs/sekil8-eimza-parola.gif                           ║
-╠══════════════════════════════════════════════════════════════╣
-║  MODÜL 2 — DOKÜMAN EDİTÖRÜ                                  ║
-╠══════════════════════════════════════════════════════════════╣
-║  img/screenshots/editor-kurulum.png                          ║
-║  img/screenshots/editor-kaydet.png                           ║
-║  img/screenshots/editor-imzala.png                           ║
-║  img/screenshots/editor-kurdele.png                          ║
-║  img/screenshots/editor-yazdir.png                           ║
-║  img/screenshots/editor-menu.png                             ║
-║                                                              ║
-║  img/gifs/editor-imzalama.gif                               ║
-║  img/gifs/editor-menu-olustur.gif                           ║
-╠══════════════════════════════════════════════════════════════╣
-║  MODÜL 3 — PERSONEL UYGULAMALARI                            ║
-╠══════════════════════════════════════════════════════════════╣
-║  img/screenshots/personel-giris.png                          ║
-║  img/screenshots/aile-fert.png                               ║
-║  img/screenshots/izin-talep.png                              ║
-║  img/screenshots/izin-amirler.png                            ║
-║  img/screenshots/nas-giris.png                               ║
-║  img/screenshots/nas-tercih.png                              ║
-║  img/screenshots/mal-bildirimi.png                           ║
-║                                                              ║
-║  img/gifs/izin-talep-sureci.gif                             ║
-║  img/gifs/nas-basvuru.gif                                   ║
-╠══════════════════════════════════════════════════════════════╣
-║  MODÜL 4 — MEVZUAT PROGRAMI                                 ║
-╠══════════════════════════════════════════════════════════════╣
-║  img/screenshots/mevzuat-indir.png                           ║
-║  img/screenshots/mevzuat-arama.png                           ║
-║  img/gifs/mevzuat-kullanim.gif                              ║
-╚══════════════════════════════════════════════════════════════╝
--->
 
        <!-- Veri Girişi Sorunları -->
 
@@ -1123,6 +915,6 @@ mevzuat.adalet.gov.tr
     });
   });
 </script>
-<script src="js/screenshots.js"></script>
+<script src="js/media.js"></script>
 </body>
 </html>
