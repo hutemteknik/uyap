@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teleprompter | Hüseyin Turgut Eğitim Merkezi</title>
+<style>
+  :root{
+    --bg:#0b0e13;
+    --panel:#141922;
+    --line:#242c3a;
+    --accent:#39d98a;
+    --accent2:#2f80ed;
+    --text:#f2f5f9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI",Roboto,Arial,sans-serif;
+    overflow:hidden;
+  }
+
+  /* ---------- ÜST PANEL ---------- */
+  #panel{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    padding:10px 14px;
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    transition:transform .3s;
+  }
+  #panel.hidden{transform:translateY(-105%)}
+  .grp{display:flex;align-items:center;gap:6px;
+       background:#1b2230;border:1px solid var(--line);
+       padding:6px 10px;border-radius:10px;font-size:13px}
+  .grp label{opacity:.75;white-space:nowrap}
+  input[type=range]{width:110px;accent-color:var(--accent)}
+  button{
+    cursor:pointer;border:none;border-radius:10px;
+    padding:9px 14px;font-size:14px;font-weight:600;
+    background:#232b3a;color:var(--text);transition:.15s;
+  }
+  button:hover{background:#2e3849}
+  button.primary{background:var(--accent);color:#07110b}
+  button.primary:hover{filter:brightness(1.1)}
+  button.on{background:var(--accent2);color:#fff}
+  select,textarea{
+    background:#1b2230;color:var(--text);
+    border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:13px;
+  }
+  .val{min-width:34px;text-align:right;font-variant-numeric:tabular-nums;color:var(--accent)}
+
+  /* ---------- PROMPTER ALANI ---------- */
+  #stage{position:fixed;inset:0;overflow:hidden}
+  #scroller{
+    position:absolute;inset:0;overflow-y:auto;scroll-behavior:auto;
+    scrollbar-width:none;
+  }
+  #scroller::-webkit-scrollbar{display:none}
+  #script{
+    max-width:900px;margin:0 auto;
+    padding:60vh 30px 90vh;
+    font-size:52px;line-height:1.5;font-weight:600;
+    text-align:center;white-space:pre-wrap;
+    letter-spacing:.3px;
+  }
+  #script h2{font-size:.55em;opacity:.55;font-weight:600;letter-spacing:2px;margin-bottom:.6em}
+  #script em{font-size:.6em;opacity:.6;font-style:italic;display:block;margin:.7em 0}
+  #script b{color:var(--accent)}
+  #script p{margin:0 0 .8em}
+
+  /* Ayna modları */
+  .mirX #script{transform:scaleX(-1)}
+  .mirY #script{transform:scaleY(-1)}
+  .mirX.mirY #script{transform:scale(-1,-1)}
+
+  /* Okuma çizgisi */
+  #guide{
+    position:fixed;left:0;right:0;top:40%;height:0;z-index:20;pointer-events:none;
+    border-top:2px solid rgba(57,217,138,.55);
+  }
+  #guide::before,#guide::after{
+    content:"";position:absolute;top:-9px;
+    border:9px solid transparent;
+  }
+  #guide::before{left:0;border-left-color:var(--accent)}
+  #guide::after{right:0;border-right-color:var(--accent)}
+  .noguide #guide{display:none}
+
+  /* Karartma (vinyet) */
+  #vig{position:fixed;inset:0;z-index:15;pointer-events:none;
+    background:linear-gradient(180deg,rgba(11,14,19,.95) 0%,rgba(11,14,19,0) 22%,
+    rgba(11,14,19,0) 78%,rgba(11,14,19,.95) 100%);}
+
+  /* Sayaç */
+  #timer{position:fixed;right:14px;bottom:12px;z-index:40;
+    font-size:14px;color:#8b97a8;font-variant-numeric:tabular-nums;
+    background:rgba(20,25,34,.8);padding:6px 12px;border-radius:20px}
+
+  /* Geri sayım */
+  #count{position:fixed;inset:0;z-index:60;display:none;
+    align-items:center;justify-content:center;
+    background:rgba(11,14,19,.92);font-size:22vw;font-weight:800;color:var(--accent)}
+
+  /* Editör */
+  #editor{position:fixed;inset:0;z-index:70;display:none;
+    background:rgba(6,9,13,.96);padding:70px 20px 20px}
+  #editor textarea{width:100%;height:100%;max-width:1000px;margin:0 auto;display:block;
+    font-size:16px;line-height:1.6;padding:16px;resize:none}
+  #editor .bar{position:fixed;top:14px;left:0;right:0;display:flex;gap:10px;justify-content:center}
+
+  #showPanel{position:fixed;top:8px;left:50%;transform:translateX(-50%);
+    z-index:55;display:none;padding:5px 16px;font-size:12px;opacity:.5}
+  #showPanel:hover{opacity:1}
+
+  @media(max-width:700px){ #script{font-size:34px;padding:55vh 18px 80vh} }
+</style>
+</head>
+<body>
+
+<!-- ================= KONTROL PANELİ ================= -->
+<div id="panel">
+  <button id="btnPlay" class="primary">▶ Başlat (Space)</button>
+  <button id="btnReset">⟲ Başa Dön</button>
+
+  <div class="grp">
+    <label>Hız</label>
+    <input type="range" id="speed" min="1" max="200" value="45">
+    <span class="val" id="speedV">45</span>
+  </div>
+
+  <div class="grp">
+    <label>Yazı</label>
+    <input type="range" id="size" min="20" max="110" value="52">
+    <span class="val" id="sizeV">52</span>
+  </div>
+
+  <div class="grp">
+    <label>Satır</label>
+    <input type="range" id="lh" min="100" max="250" value="150">
+    <span class="val" id="lhV">1.5</span>
+  </div>
+
+  <div class="grp">
+    <label>Genişlik</label>
+    <input type="range" id="width" min="400" max="1600" value="900">
+    <span class="val" id="widthV">900</span>
+  </div>
+
+  <div class="grp">
+    <label>Metin</label>
+    <select id="preset">
+      <option value="acilis">Açılış Konuşması</option>
+      <option value="kapanis">Kapanış Konuşması</option>
+    </select>
+  </div>
+
+  <button id="btnMirX">🪞 Yatay Ayna</button>
+  <button id="btnMirY">🔃 Dikey Ayna</button>
+  <button id="btnGuide" class="on">➤ Çizgi</button>
+  <button id="btnEdit">✏️ Düzenle</button>
+  <button id="btnFull">⛶ Tam Ekran</button>
+  <button id="btnHide">▲ Paneli Gizle</button>
+</div>
+<button id="showPanel">▼ Paneli Göster</button>
+
+<!-- ================= PROMPTER ================= -->
+<div id="stage">
+  <div id="scroller"><div id="script"></div></div>
+  <div id="vig"></div>
+  <div id="guide"></div>
+</div>
+
+<div id="timer">00:00</div>
+<div id="count"></div>
+
+<!-- ================= EDİTÖR ================= -->
+<div id="editor">
+  <div class="bar">
+    <button class="primary" id="edSave">✔ Kaydet ve Kapat</button>
+    <button id="edCancel">✖ Vazgeç</button>
+  </div>
+  <textarea id="edText" spellcheck="false"></textarea>
+</div>
+
+<script>
+/* ================== HAZIR METİNLER ================== */
+const TEXTS = {
+acilis:
+`<h2>AÇILIŞ KONUŞMASI</h2>
+<em>(Kameraya bakarak, sakin ve güven veren bir tonla)</em>
+
+<p>Her eğitim,
+bir kararla başlar.</p>
+
+<p>Bu karar;
+yalnızca bir programa katılmak değildir.
+Mevcut bilgiyi güncellemek,
+mesleki birikimi güçlendirmek
+ve görevin gerektirdiği donanımı geliştirmek iradesidir.</p>
+
+<p><b>Hüseyin Turgut Eğitim Merkezi'nde</b> bu karar,
+ortak bir sorumluluğa dönüşür.</p>
+
+<p>Çünkü burada her eğitim;
+<b>mevzuata uygun, uygulamalı ve insan odaklı bir anlayışla şekillenir.</b></p>
+
+<p>Bu anlayışın merkezinde ise tek bir hedef vardır:
+<b>Daima bir adım ileri.</b></p>
+
+<p>Şimdi...
+Bu gelişim yolculuğuna birlikte tanıklık edelim.</p>
+
+<em>(Son cümlede hafif bir tebessümle doğrudan kameranın içine bakın ve 2 saniye sessizce bekleyin.)</em>`,
+
+kapanis:
+`<h2>KAPANIŞ KONUŞMASI</h2>
+<em>(Gururlu, samimi ve tebrik eden bir tonla)</em>
+
+<p>Tanıklık ettiğimiz bu sürecin sonunda atılan imza;
+basit bir evrak değil, emekle yoğrulan bir birikimin sonucudur.</p>
+
+<em>(☝ Elinizi belgenin üzerine koyun veya belgeyi hafifçe gösterin)</em>
+
+<p>Elinizdeki <b>Katılım Belgesi</b>,
+sıradan bir evrak olmanın çok ötesindedir.</p>
+
+<p>Çünkü burada edinilen bilgi ve kazanılan tecrübe;
+bundan sonraki görevlerinize <b>daha güçlü bir duruş</b>,
+<b>daha yüksek bir yetkinlik</b>
+ve <b>derin bir sorumluluk bilinci</b> olarak yansıyacaktır.</p>
+
+<p>Katılımınız ve gayretiniz için teşekkür ediyor,
+mesleki gelişim yolculuğunuzda başarılar diliyorum.</p>
+
+<p><b>Daima bir adım ileri.</b></p>
+
+<em>(Doğrudan kameraya bakarak hafifçe baş selamı verin ve 2 saniye sessizce bekleyin.)</em>`
+};
+
+/* ================== ELEMANLAR ================== */
+const $ = id => document.getElementById(id);
+const scroller = $('scroller'), script = $('script'), stage = $('stage');
+let playing = false, speed = 45, raf = null, acc = 0, last = 0;
+let t0 = 0, tAcc = 0, tTick = null;
+
+/* ================== METİN YÜKLE ================== */
+function load(key){ script.innerHTML = TEXTS[key]; reset(); }
+load('acilis');
+$('preset').onchange = e => load(e.target.value);
+
+/* ================== KAYDIRMA MOTORU ================== */
+function loop(ts){
+  if(!playing) return;
+  if(!last) last = ts;
+  const dt = (ts - last)/1000; last = ts;
+  acc += speed * dt;                 // px/saniye
+  const px = Math.floor(acc);
+  if(px >= 1){ scroller.scrollTop += px; acc -= px; }
+  if(scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) pause();
+  raf = requestAnimationFrame(loop);
+}
+function play(){
+  if(playing) return;
+  playing = true; last = 0; acc = 0;
+  $('btnPlay').textContent = '⏸ Duraklat (Space)';
+  t0 = performance.now();
+  tTick = setInterval(updTimer, 250);
+  raf = requestAnimationFrame(loop);
+}
+function pause(){
+  playing = false; cancelAnimationFrame(raf);
+  $('btnPlay').textContent = '▶ Başlat (Space)';
+  if(tTick){ tAcc += performance.now()-t0; clearInterval(tTick); tTick=null; }
+}
+function toggle(){
+  if(playing) pause();
+  else countdown(play);
+}
+function reset(){
+  pause(); scroller.scrollTop = 0; tAcc = 0; updTimer();
+}
+$('btnPlay').onclick = toggle;
+$('btnReset').onclick = reset;
+
+/* ================== GERİ SAYIM ================== */
+function countdown(cb){
+  const el = $('count'); let n = 3;
+  el.style.display='flex'; el.textContent = n;
+  const iv = setInterval(()=>{
+    n--;
+    if(n===0){ clearInterval(iv); el.style.display='none'; cb(); }
+    else el.textContent = n;
+  },800);
+}
+
+/* ================== SAYAÇ ================== */
+function updTimer(){
+  const ms = tAcc + (playing ? performance.now()-t0 : 0);
+  const s = Math.floor(ms/1000);
+  $('timer').textContent =
+    String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
+
+/* ================== AYARLAR ================== */
+$('speed').oninput = e => { speed = +e.target.value; $('speedV').textContent = speed; };
+$('size').oninput  = e => { script.style.fontSize = e.target.value+'px'; $('sizeV').textContent = e.target.value; };
+$('lh').oninput    = e => { const v=(e.target.value/100).toFixed(2); script.style.lineHeight=v; $('lhV').textContent=v; };
+$('width').oninput = e => { script.style.maxWidth = e.target.value+'px'; $('widthV').textContent = e.target.value; };
+
+/* ================== AYNA / ÇİZGİ ================== */
+$('btnMirX').onclick = e => { stage.classList.toggle('mirX'); e.target.classList.toggle('on'); };
+$('btnMirY').onclick = e => { stage.classList.toggle('mirY'); e.target.classList.toggle('on'); };
+$('btnGuide').onclick = e => { document.body.classList.toggle('noguide'); e.target.classList.toggle('on'); };
+
+/* ================== TAM EKRAN ================== */
+$('btnFull').onclick = () => {
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+};
+
+/* ================== PANEL GİZLE ================== */
+$('btnHide').onclick = () => { $('panel').classList.add('hidden'); $('showPanel').style.display='block'; };
+$('showPanel').onclick = () => { $('panel').classList.remove('hidden'); $('showPanel').style.display='none'; };
+
+/* ================== EDİTÖR ================== */
+$('btnEdit').onclick = () => {
+  pause();
+  $('edText').value = script.innerHTML.trim();
+  $('editor').style.display='block';
+};
+$('edSave').onclick = () => {
+  script.innerHTML = $('edText').value;
+  $('editor').style.display='none'; reset();
+};
+$('edCancel').onclick = () => $('editor').style.display='none';
+
+/* ================== KLAVYE ================== */
+document.addEventListener('keydown', e=>{
+  if($('editor').style.display==='block') return;
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
+  switch(e.code){
+    case 'Space': e.preventDefault(); toggle(); break;
+    case 'ArrowUp': e.preventDefault();
+      $('speed').value = Math.min(200,+$('speed').value+5); $('speed').oninput({target:$('speed')}); break;
+    case 'ArrowDown': e.preventDefault();
+      $('speed').value = Math.max(1,+$('speed').value-5); $('speed').oninput({target:$('speed')}); break;
+    case 'KeyR': reset(); break;
+    case 'KeyM': $('btnMirX').click(); break;
+    case 'KeyF': $('btnFull').click(); break;
+    case 'Escape': pause(); break;
+  }
+});
+
+/* Tekerlek ile manuel kaydırınca duraklat */
+scroller.addEventListener('wheel', ()=>{ if(playing) pause(); }, {passive:true});
+</script>
+</body>
+</html>
