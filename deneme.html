@@ -1,0 +1,131 @@
+<!-- MİSAFİRHANE HERO BANNER BAŞLANGICI -->
+<div class="misafirhane-hero">
+    <div class="hero-icerik">
+        <span class="etiket">EĞİTİM MERKEZİ BİRİMLERİ</span>
+        <h1>Hüseyin Turgut Erzurum <br>Eğitim Merkezi Misafirhanesi</h1>
+        <p>Kamu personeli ve hak sahiplerine yönelik, konforlu ve güvenli konaklama hizmeti.</p>
+        
+        <div class="hero-ozellikler">
+            <div class="ozellik"><i class="icon">🛏️</i> 4 Adet Konuk Odası</div>
+            <div class="ozellik"><i class="icon">🅿️</i> Ücretsiz Otopark</div>
+            <div class="ozellik"><i class="icon">🚿</i> 7/24 Sıcak Su</div>
+        </div>
+
+        <div class="hero-butonlar">
+            <a href="#fiyatlar" class="btn btn-beyaz">Güncel Fiyatlar</a>
+            <a href="#iletisim" class="btn btn-seffaf">İletişim & Konum</a>
+        </div>
+    </div>
+</div>
+<!-- MİSAFİRHANE HERO BANNER BİTİŞİ -->
+
+<style>
+/* Hero Banner Temel Kapsayıcı */
+.misafirhane-hero {
+    position: relative;
+    width: 100%;
+    /* Sitenin kırmızı tonu ve CSS Geometrik Çizgi Deseni */
+    background: linear-gradient(135deg, #c3141a 0%, #8b0000 100%);
+    background-image: 
+        linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.05) 75%, transparent 75%, transparent);
+    background-size: 60px 60px; /* Geometrik çizgilerin boyutu */
+    color: #ffffff;
+    padding: 80px 40px;
+    border-radius: 8px; /* İsteğe bağlı, sitenin yapısına göre kaldırılabilir */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif; /* Sitenin fontuyla değiştirin */
+    overflow: hidden;
+}
+
+/* Sol Üstteki Küçük Etiket */
+.etiket {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Ana Başlık */
+.hero-icerik h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+/* Alt Metin */
+.hero-icerik p {
+    font-size: 18px;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+/* 3'lü Özellik Kutuları (Yan Yana) */
+.hero-ozellikler {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.ozellik {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Buton Alanı */
+.hero-butonlar {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn-beyaz {
+    background-color: #ffffff;
+    color: #c3141a;
+}
+
+.btn-beyaz:hover {
+    background-color: #f1f1f1;
+    transform: translateY(-2px);
+}
+
+.btn-seffaf {
+    border: 2px solid #ffffff;
+    color: #ffffff;
+}
+
+.btn-seffaf:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 768px) {
+    .hero-ozellikler {
+        flex-direction: column;
+    }
+    .hero-butonlar {
+        flex-direction: column;
+    }
+    .hero-icerik h1 {
+        font-size: 28px;
+    }
+}
+</style>

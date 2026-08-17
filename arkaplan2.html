@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misafirhane - Hero Banner Örnek 2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  .hero {
+    position: relative;
+    min-height: 420px;
+    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Nokta deseni */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(
+      rgba(255,255,255,0.06) 1px,
+      transparent 1px
+    );
+    background-size: 30px 30px;
+    z-index: 1;
+  }
+
+  /* Alt dalga SVG */
+  .wave-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+  }
+
+  /* Üst dalga SVG */
+  .wave-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    transform: rotate(180deg);
+  }
+
+  /* Sağ taraf dekoratif yatak ikonu */
+  .hero-icon-area {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    opacity: 0.12;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 700px;
+    padding: 40px 60px;
+    color: #fff;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(192, 57, 43, 0.8);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .hero-content h1 {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .hero-content h2 {
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .hero-content .subtitle {
+    font-size: 16px;
+    margin-bottom: 24px;
+    opacity: 0.85;
+    line-height: 1.7;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-red {
+    background: #c0392b;
+    color: #fff;
+  }
+
+  .btn-red:hover {
+    background: #a93226;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(192,57,43,0.4);
+  }
+
+  .btn-glass {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(8px);
+  }
+
+  .btn-glass:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
+  }
+
+  .hero-features {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .feature-dot {
+    width: 6px;
+    height: 6px;
+    background: #c0392b;
+    border-radius: 50%;
+  }
+
+  /* Dekoratif köşe çizgileri */
+  .corner-line {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .corner-line-tl {
+    top: 30px; left: 30px;
+    width: 60px; height: 60px;
+    border-top: 2px solid rgba(255,255,255,0.12);
+    border-left: 2px solid rgba(255,255,255,0.12);
+  }
+
+  .corner-line-br {
+    bottom: 30px; right: 30px;
+    width: 60px; height: 60px;
+    border-bottom: 2px solid rgba(255,255,255,0.12);
+    border-right: 2px solid rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <!-- Köşe çizgileri -->
+  <div class="corner-line corner-line-tl"></div>
+  <div class="corner-line corner-line-br"></div>
+
+  <!-- Alt dalga -->
+  <svg class="wave-bottom" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,60 C360,120 720,0 1080,80 C1260,100 1380,40 1440,60 L1440,120 L0,120 Z" fill="rgba(192,57,43,0.15)" />
+    <path d="M0,80 C320,40 640,100 960,60 C1200,30 1360,90 1440,70 L1440,120 L0,120 Z" fill="rgba(192,57,43,0.08)" />
+  </svg>
+
+  <!-- Sağ taraf büyük yatak ikonu -->
+  <svg class="hero-icon-area" width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Yatak gövdesi -->
+    <rect x="20" y="100" width="260" height="50" rx="8" fill="white" />
+    <!-- Yatak başlığı -->
+    <rect x="20" y="60" width="80" height="90" rx="6" fill="white" />
+    <!-- Yastık -->
+    <rect x="30" y="70" width="60" height="25" rx="12" fill="white" opacity="0.6" />
+    <!-- Yatak ayakları -->
+    <rect x="30" y="150" width="12" height="25" rx="3" fill="white" />
+    <rect x="258" y="150" width="12" height="25" rx="3" fill="white" />
+    <!-- Battaniye çizgisi -->
+    <line x1="110" y1="115" x2="270" y2="115" stroke="white" stroke-width="1" opacity="0.4" />
+    <line x1="110" y1="125" x2="270" y2="125" stroke="white" stroke-width="1" opacity="0.3" />
+  </svg>
+
+  <!-- İçerik -->
+  <div class="hero-content">
+    <span class="hero-badge">Misafirhane</span>
+    <h1>Hüseyin Turgut Erzurum</h1>
+    <h2>Eğitim Merkezi Misafirhanesi</h2>
+    <p class="subtitle">
+      Kamu personeli ve hak sahiplerine yönelik konforlu konaklama hizmeti.
+      Oda bilgileri, güncel ücret tarifesi ve konaklama koşullarına bu sayfadan ulaşabilirsiniz.
+    </p>
+    <div class="hero-buttons">
+      <a href="#ucretler" class="btn btn-red">Güncel Ücretler</a>
+      <a href="#iletisim" class="btn btn-glass">İletişim</a>
+      <a href="#kurallar" class="btn btn-glass">Konaklama Kuralları</a>
+    </div>
+    <div class="hero-features">
+      <div class="feature-item"><div class="feature-dot"></div> 4 Oda</div>
+      <div class="feature-item"><div class="feature-dot"></div> Ücretsiz Otopark</div>
+      <div class="feature-item"><div class="feature-dot"></div> 7/24 Sıcak Su</div>
+      <div class="feature-item"><div class="feature-dot"></div> Fitness Salonu</div>
+      <div class="feature-item"><div class="feature-dot"></div> Kütüphane</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

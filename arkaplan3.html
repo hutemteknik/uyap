@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misafirhane - Hero Banner Örnek 3</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  .hero {
+    position: relative;
+    min-height: 400px;
+    background: linear-gradient(135deg, #960018 0%, #b71c1c 50%, #8B0000 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Altıgen desen arka plan */
+  .hex-pattern {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    opacity: 0.08;
+  }
+
+  /* Sol taraf gradient kapatma */
+  .hero-gradient-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 65%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      rgba(150,0,24,0.95) 0%, 
+      rgba(150,0,24,0.7) 60%, 
+      transparent 100%
+    );
+    z-index: 2;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 680px;
+    padding: 40px 60px;
+    color: #fff;
+  }
+
+  .hero-top-line {
+    width: 60px;
+    height: 3px;
+    background: rgba(255,255,255,0.6);
+    margin-bottom: 20px;
+    border-radius: 2px;
+  }
+
+  .hero-content h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  .hero-content h2 {
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 18px;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .hero-divider {
+    width: 40px;
+    height: 2px;
+    background: rgba(255,255,255,0.4);
+    margin-bottom: 18px;
+  }
+
+  .hero-content .subtitle {
+    font-size: 16px;
+    margin-bottom: 24px;
+    opacity: 0.88;
+    line-height: 1.7;
+    max-width: 550px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: #fff;
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(243,156,18,0.4);
+  }
+
+  .btn-light {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  .btn-light:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    display: block;
+    color: #f39c12;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Sağ taraftaki dekoratif ikonlar */
+  .deco-icons {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0.15;
+  }
+
+  .deco-icon-box {
+    width: 70px;
+    height: 70px;
+    border: 2px solid #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <!-- Altıgen desen SVG -->
+  <svg class="hex-pattern" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="hexagons" width="56" height="100" patternUnits="userSpaceOnUse" patternTransform="scale(1.5)">
+        <path d="M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100" fill="none" stroke="white" stroke-width="0.8"/>
+        <path d="M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34" fill="none" stroke="white" stroke-width="0.3"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#hexagons)" />
+  </svg>
+
+  <!-- Sol gradient overlay -->
+  <div class="hero-gradient-overlay"></div>
+
+  <!-- Sağ taraf dekoratif ikonlar -->
+  <div class="deco-icons">
+    <div class="deco-icon-box">🛏️</div>
+    <div class="deco-icon-box">🏢</div>
+    <div class="deco-icon-box">🔑</div>
+    <div class="deco-icon-box">⭐</div>
+  </div>
+
+  <!-- İçerik -->
+  <div class="hero-content">
+    <div class="hero-top-line"></div>
+    <h1>Hüseyin Turgut Erzurum Eğitim Merkezi</h1>
+    <h2>Misafirhanesi</h2>
+    <div class="hero-divider"></div>
+    <p class="subtitle">
+      Kamu personeli ve hak sahiplerine yönelik konforlu konaklama hizmeti sunulmaktadır.
+      Oda bilgileri, güncel ücret tarifesi ve konaklama koşullarına bu sayfadan ulaşabilirsiniz.
+    </p>
+    <div class="hero-buttons">
+      <a href="#ucretler" class="btn btn-gold">💰 Güncel Ücretler</a>
+      <a href="#iletisim" class="btn btn-light">📞 İletişim</a>
+      <a href="#ulasim" class="btn btn-light">📍 Ulaşım</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-number">4</span>
+        <span class="stat-label">Oda</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">14</span>
+        <span class="stat-label">Yatak</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">7/24</span>
+        <span class="stat-label">Hizmet</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Otopark</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
